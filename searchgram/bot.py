@@ -14,13 +14,10 @@ from pyrogram import Client, filters, types
 from config import OWNER_ID, TOKEN
 from es import TGES
 from init_client import get_client
+from utils import apply_log_formatter
 
+apply_log_formatter()
 tges = TGES()
-logging.basicConfig(
-    level=logging.INFO,
-    format='[%(asctime)s %(filename)s:%(lineno)d %(levelname).1s] %(message)s',
-    datefmt="%Y-%m-%d %H:%M:%S"
-)
 
 app = get_client(TOKEN)
 

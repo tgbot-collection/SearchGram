@@ -15,12 +15,9 @@ from pyrogram import Client, filters, types
 from config import BOT_ID
 from es import TGES
 from init_client import get_client
+from utils import apply_log_formatter
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='[%(asctime)s %(filename)s:%(lineno)d %(levelname).1s] %(message)s',
-    datefmt="%Y-%m-%d %H:%M:%S"
-)
+apply_log_formatter()
 
 app = get_client()
 tges = TGES()
