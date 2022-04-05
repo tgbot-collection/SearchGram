@@ -36,11 +36,7 @@ def search_handler(client: "Client", message: "types.Message"):
         return
     results = tges.search(message.text)
     for result in results:
-        t = "[{}](tg://user?id={}) on {}\n`{}`".format(
-            result["from_user"]["first_name"],
-            result['from_user']["id"],
-            result['date'],
-            result['text'])
+        t = "{} on {}\n`{}`".format(result["mention"], result['date'], result['text'])
         client.send_message(message.chat.id, t, parse_mode="markdown")
 
 

@@ -12,7 +12,7 @@ import logging
 
 from pyrogram import Client, filters, types
 
-from config import BOT_ID
+from config import BOT_ID, OWNER_ID
 from es import TGES
 from init_client import get_client
 from utils import apply_log_formatter
@@ -23,8 +23,25 @@ app = get_client()
 tges = TGES()
 
 
-@app.on_message(~filters.chat(BOT_ID) & filters.text & filters.incoming | filters.outgoing)
+@app.on_message(filters.text & filters.outgoing | filters.incoming)
 def message_handler(client: "Client", message: "types.Message"):
+    # don't know why `~filters.chat(int(BOT_ID))` is not working
+    if str(message.chat.id) == BOT_ID:
+        return
+
+    template = "[{}](tg://user?id={}) to [{}](tg://user?id={})"
+    if message.outgoing:
+        mention = template.format(
+            message.from_user.first_name, message.from_user.id,
+            message.chat.first_name, message.chat.id
+        )
+    else:
+        mention = template.format(
+            message.from_user.first_name, message.from_user.id,
+            "me", OWNER_ID
+        )
+
+    setattr(message, "mention", mention)
     data = json.loads(str(message))
     tges.insert(data)
 

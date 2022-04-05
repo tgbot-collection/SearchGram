@@ -42,3 +42,9 @@ upgrade:
 	git pull
 	docker pull bennythink/searchgram
 	docker-compose up -d
+
+clean_es:
+	docker-compose down es
+	rm -rf es_data/*
+	docker-compose up -d es
+
