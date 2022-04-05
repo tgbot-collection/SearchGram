@@ -23,8 +23,8 @@ I'm not planning to be sitting ducks, so I create a bot that can search for CJK 
 
 1. Telegram allows multiple sessions, maximum is 10 clients.
 2. We create a hidden session
-3. We use this session to store all your incoming and outgoing text messages to ElasticSearch
-4. We create another bot to use the fulltext search of ElasticSearch
+3. We use this session to store all your incoming and outgoing text messages to MongoDB
+4. We create another bot to search MongoDB
 5. We return the whole sentense, so you could use Telegram's built-in buggy search feature.
 
 # Screenshots
@@ -41,7 +41,6 @@ I'm not planning to be sitting ducks, so I create a bot that can search for CJK 
 
 Install docker and docker-compose on your server, clone this repository to any directory you want.
 
-It's better to have more RAM because ElasticSearch is like Google Chrome.
 
 ## 2. (Optional) Prepare Encryption data volume
 
@@ -58,8 +57,8 @@ make format
 
 ```shell
 # create loop file and loop device
-fallocate -l 1G pv1.img
-losetup /dev/loop0 pv1.img
+fallocate -l 1G pv0.img
+losetup /dev/loop0 pv0.img
 # verify loop device
 fdisk -l /dev/loop0
 Disk /dev/loop0: 1 GiB, 1073741824 bytes, 2097152 sectors
@@ -73,43 +72,43 @@ I/O size (minimum/optimal): 512 bytes / 512 bytes
 
 ```shell
 pvcreate /dev/loop0
-vgcreate vg_es_data /dev/loop0
+vgcreate vg_mongo_data /dev/loop0
 # use vgdisplay to confirm Volume Group
 vgdisplay
 
 # create logical volume
-lvcreate --extents 100%FREE vg_es_data -n lv_es_data
+lvcreate --extents 100%FREE vg_mongo_data -n lv_mongo_data
 
 # You should have device here 
-file /dev/vg_es_data/lv_es_data
+file /dev/vg_mongo_data/lv_mongo_data
 ```
 
 ### 2.3 luks
 
 ```shell
 # format lucks and input your password
-cryptsetup luksFormat /dev/vg_es_data/lv_es_data
+cryptsetup luksFormat /dev/vg_mongo_data/lv_mongo_data
 # open device
-cryptsetup luksOpen /dev/vg_es_data/lv_es_data es_data
-# you should see /dev/mapper/es_data
-file /dev/mapper/es_data
-cryptsetup status es_data
+cryptsetup luksOpen /dev/vg_mongo_data/lv_mongo_data mongo_data
+# you should see /dev/mapper/mongo_data
+file /dev/mapper/mongo_data
+cryptsetup status mongo_data
 ```
 
 ### 2.4 format and mount
 
 ```shell
-mkfs.ext4 /dev/mapper/es_data
-mkdir -p es_data
-mount /dev/mapper/es_data ./es_data
-chmod 777 es_data
+mkfs.ext4 /dev/mapper/mongo_data
+mkdir -p mongo_data
+mount /dev/mapper/mongo_data ./mongo_data
+chmod 777 mongo_data
 ```
 
 ### 2.5 unmount and remove
 
 ```shell
-umount /dev/mapper/es_data
-cryptsetup luksClose es_data
+umount /dev/mapper/mongo_data
+cryptsetup luksClose mongo_data
 ````
 
 ## 3. Prepare APP_ID, APP_HASH and bot token

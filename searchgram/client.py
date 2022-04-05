@@ -13,14 +13,14 @@ import logging
 from pyrogram import Client, filters, types
 
 from config import BOT_ID, OWNER_ID
-from es import TGES
+from engine import Mongo
 from init_client import get_client
 from utils import apply_log_formatter
 
 apply_log_formatter()
 
 app = get_client()
-tges = TGES()
+tgdb = Mongo()
 
 
 @app.on_message(filters.outgoing | filters.incoming)
@@ -48,7 +48,7 @@ def message_handler(client: "Client", message: "types.Message"):
 
     setattr(message, "mention", mention)
     data = json.loads(str(message))
-    tges.insert(data)
+    tgdb.insert(data)
 
 
 if __name__ == '__main__':

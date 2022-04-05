@@ -12,41 +12,34 @@ down:
 	docker-compose down
 
 clean:
-	rm -rf es_data
+	rm -rf mongo_data
 
 open:
-	cryptsetup luksOpen /dev/vg_es_data/lv_es_data es_data
-	mount /dev/mapper/es_data ./es_data
+	cryptsetup luksOpen /dev/vg_mongo_data/lv_mongo_data mongo_data
+	mount /dev/mapper/mongo_data ./mongo_data
 
 close:
-	umount /dev/mapper/es_data
-	cryptsetup luksClose es_data
+	umount /dev/mapper/mongo_data
+	cryptsetup luksClose mongo_data
 
 encrypt:
 	fallocate -l 20G pv0.img
 	losetup /dev/loop0 pv0.img
 	pvcreate /dev/loop0
-	vgcreate vg_es_data /dev/loop0
-	lvcreate --extents 100%FREE vg_es_data -n lv_es_data
+	vgcreate vg_mongo_data /dev/loop0
+	lvcreate --extents 100%FREE vg_mongo_data -n lv_mongo_data
 
-	cryptsetup luksFormat /dev/vg_es_data/lv_es_data
-	cryptsetup luksOpen /dev/vg_es_data/lv_es_data es_data
+	cryptsetup luksFormat /dev/vg_mongo_data/lv_mongo_data
+	cryptsetup luksOpen /dev/vg_mongo_data/lv_mongo_data mongo_data
 
 format:
-	mkfs.ext4 /dev/mapper/es_data
-	mkdir -p es_data
-	mount /dev/mapper/es_data ./es_data
-	chmod 777 es_data
+	mkfs.ext4 /dev/mapper/mongo_data
+	mkdir -p mongo_data
+	mount /dev/mapper/mongo_data ./mongo_data
+	chmod 777 mongo_data
 
 upgrade:
 	git pull
 	docker pull bennythink/searchgram
 	docker-compose up -d
 
-clean_es:
-	docker-compose down es
-	rm -rf es_data/*
-	docker-compose up -d es
-
-code:
-	docker-compose exec kibana /usr/share/kibana/bin/kibana-verification-code

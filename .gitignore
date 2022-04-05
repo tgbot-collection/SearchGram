@@ -137,7 +137,7 @@ es_data/
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/SearchGram.iml
 /.idea/vcs.xml
-/searchgram/session/bot.session
-/searchgram/session/client.session
 /.ash_history
 *.img
+mongo_data/*
+searchgram/session/*

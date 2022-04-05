@@ -14,12 +14,12 @@ import time
 from pyrogram import Client, filters, types
 
 from config import OWNER_ID, TOKEN
-from es import TGES
+from engine import Mongo
 from init_client import get_client
 from utils import apply_log_formatter
 
 apply_log_formatter()
-tges = TGES()
+tgdb = Mongo()
 
 app = get_client(TOKEN)
 
@@ -36,7 +36,7 @@ def search_handler(client: "Client", message: "types.Message"):
     if message.chat.id != int(OWNER_ID):
         logging.warning("Unauthorized user: %s", message.from_user.id)
         return
-    results = tges.search(message.text)
+    results = tgdb.search(message.text)
     for result in results:
         t = "{} on {}\n`{}`".format(result["mention"], result['date'], result['text'])
         time.sleep(random.random())
