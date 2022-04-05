@@ -1,6 +1,6 @@
 init:
 	mkdir -p session
-	docker run --rm -v $(pwd):/root/ -w /root/searchgram --env-file=env/gram.env --entrypoint=/bin/sh -it bennythink/searchgram
+	docker run --rm -v $(shell pwd):/root/ -w /root/searchgram --env-file=env/gram.env --entrypoint=/bin/sh -it bennythink/searchgram
 
 up:
 	echo "Starting up..."

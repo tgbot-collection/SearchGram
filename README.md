@@ -37,7 +37,12 @@ Install docker and docker-compose on your server, clone this repository to any d
 
 It's highly recommend to use encrypted data volume. You can use LUKS.
 
-Here there is an example of using loop+LVM+LUKS
+Here there is an example of using loop+LVM+LUKS, you can also use simple make commands:
+
+```shell
+make encrypt
+make format
+```
 
 ### 2.1 Create loop device
 
