@@ -106,7 +106,7 @@ cryptsetup luksClose es_data
 
 1. You can get APP_ID and APP_HASH from https://core.telegram.org/
 2. Talk to @BotFather to get your bot token
-3. Talk to @blog_update_bot to get your user id
+3. Talk to @blog_update_bot to get your user id and your bot's id
 
 ## 4. Modify env file
 
@@ -116,7 +116,7 @@ TOKEN=3token
 APP_ID=id
 APP_HASH=hash
 OWNER_ID=your user_id
-
+BOT_ID=your bot_id
 ```
 
 ## 5. Login to client
@@ -133,7 +133,8 @@ python client.py
 
 Follow the instruction to log in to your account.
 
-When you see 'started xxx handlers', Ctrl + D to exit. You should find session file under `searchgram/session/client.session`.
+When you see 'started xxx handlers', Ctrl + D to exit. You should find session file
+under `searchgram/session/client.session`.
 
 ## 6. Up and running
 

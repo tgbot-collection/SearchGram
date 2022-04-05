@@ -37,3 +37,7 @@ format:
 	mkdir -p es_data
 	mount /dev/mapper/es_data ./es_data
 	chmod 777 es_data
+
+upgrade:
+	docker pull bennythink/searchgram
+	docker-compose up -d

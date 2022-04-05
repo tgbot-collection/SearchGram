@@ -12,7 +12,7 @@ import logging
 
 from pyrogram import Client, filters, types
 
-from config import APP_HASH, APP_ID
+from config import APP_HASH, APP_ID, BOT_ID
 from es import TGES
 
 logging.basicConfig(
@@ -28,7 +28,7 @@ app = Client("session/client", APP_ID, APP_HASH,
 tges = TGES()
 
 
-@app.on_message(filters.text & filters.incoming | filters.outgoing)
+@app.on_message(~filters.chat(BOT_ID) & filters.text & filters.incoming | filters.outgoing)
 def message_handler(client: "Client", message: "types.Message"):
     data = json.loads(str(message))
     tges.insert(data)
