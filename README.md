@@ -132,7 +132,7 @@ python client.py
 
 Follow the instruction to log in to your account.
 
-When you finish, Ctrl + D to exit. You should find session file under `session/client.session`.
+When you see 'started xxx handlers', Ctrl + D to exit. You should find session file under `searchgram/session/client.session`.
 
 ## 6. Up and running
 

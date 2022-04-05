@@ -1,5 +1,4 @@
 init:
-	mkdir -p session
 	docker run --rm -v $(shell pwd):/root/ -w /root/searchgram --env-file=env/gram.env --entrypoint=/bin/sh -it bennythink/searchgram
 
 up:
@@ -13,7 +12,6 @@ down:
 	docker-compose down
 
 clean:
-	rm -rf session
 	rm -rf es_data
 
 open:

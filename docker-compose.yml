@@ -8,7 +8,7 @@ services:
       - ./es_data:/usr/share/elasticsearch/data
     environment:
       discovery.type: "single-node"
-      xpack.security.enabled: false
+      xpack.security.enabled: 'false'
 
   client:
     image: bennythink/searchgram
@@ -18,7 +18,7 @@ services:
     depends_on:
       - es
     volumes:
-      - ./session:/SearchGram/searchgram/session
+      - ./searchgram/session:/SearchGram/searchgram/session
     command:
       - client.py
 
@@ -30,7 +30,7 @@ services:
     depends_on:
       - es
     volumes:
-      - ./session:/SearchGram/searchgram/session
+      - ./searchgram/session:/SearchGram/searchgram/session
     command:
       - bot.py
 
