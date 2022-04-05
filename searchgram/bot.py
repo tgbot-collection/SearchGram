@@ -21,8 +21,8 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 
-app = Client("bot", APP_ID, APP_HASH, bot_token=TOKEN,
-             proxy={"hostname": "host.docker.internal", "port": 1080}
+app = Client("session/bot", APP_ID, APP_HASH, bot_token=TOKEN,
+             # proxy={"hostname": "host.docker.internal", "port": 1080}
              )
 
 

@@ -9,8 +9,6 @@ services:
     environment:
       discovery.type: "single-node"
       xpack.security.enabled: false
-    ports:
-      - "127.0.0.1:9200:9200"
 
   client:
     image: bennythink/searchgram
@@ -20,7 +18,7 @@ services:
     depends_on:
       - es
     volumes:
-      - ./data/client.session:/SearchGram/searchgram/client.session
+      - ./session:/SearchGram/searchgram/session
     command:
       - client.py
 
@@ -32,7 +30,7 @@ services:
     depends_on:
       - es
     volumes:
-      - ./data/bot.session:/SearchGram/searchgram/bot.session
+      - ./session:/SearchGram/searchgram/session
     command:
       - bot.py
 

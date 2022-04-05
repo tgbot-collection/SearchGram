@@ -21,8 +21,8 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 
-app = Client("client", APP_ID, APP_HASH,
-             proxy={"hostname": "host.docker.internal", "port": 1080}
+app = Client("session/client", APP_ID, APP_HASH,
+             # proxy={"hostname": "host.docker.internal", "port": 1080}
              )
 
 tges = TGES()

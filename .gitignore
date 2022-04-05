@@ -137,3 +137,7 @@ es_data/
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/SearchGram.iml
 /.idea/vcs.xml
+/session/bot.session
+/session/client.session
+/.ash_history
+*.img
