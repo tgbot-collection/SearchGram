@@ -25,7 +25,10 @@ class TGES:
 
     def search(self, text):
         results = []
-        resp = self.es.search(index=self.index, body={"query": {"match": {"text": text}}})
+        # automatic Tokenization by es, so we'll use match_phrase
+        # resp = self.es.search(index=self.index, query={"match": {"text": text}})
+        # q = {"match_phrase": {"text": {"query": text, "slop": 2}}}
+        resp = self.es.search(index=self.index, query={"match_phrase": {"text": text}})
         for hit in resp['hits']['hits']:
             results.append(hit["_source"])
 
@@ -34,5 +37,5 @@ class TGES:
 
 if __name__ == '__main__':
     tges = TGES()
-    a = tges.search("哈")
-    print(a)
+    for i in tges.search("醉了"):
+        print(i["text"])

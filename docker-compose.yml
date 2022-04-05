@@ -11,6 +11,8 @@ services:
       xpack.security.enabled: 'false'
     logging:
       driver: none
+#    ports:
+#      - "127.0.0.1:9200:9200"
 
   client:
     image: bennythink/searchgram

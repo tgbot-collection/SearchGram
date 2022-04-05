@@ -48,3 +48,5 @@ clean_es:
 	rm -rf es_data/*
 	docker-compose up -d es
 
+code:
+	docker-compose exec kibana /usr/share/kibana/bin/kibana-verification-code
