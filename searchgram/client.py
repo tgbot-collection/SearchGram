@@ -23,10 +23,11 @@ app = get_client()
 tges = TGES()
 
 
-@app.on_message(filters.text & filters.outgoing | filters.incoming)
+@app.on_message(filters.outgoing | filters.incoming)
 def message_handler(client: "Client", message: "types.Message"):
     # don't know why `~filters.chat(int(BOT_ID))` is not working
     if str(message.chat.id) == BOT_ID:
+        logging.debug("Ignoring message from bot itself")
         return
 
     template = "[{}](tg://user?id={}) to [{}](tg://user?id={})"
@@ -40,6 +41,10 @@ def message_handler(client: "Client", message: "types.Message"):
             message.from_user.first_name, message.from_user.id,
             "me", OWNER_ID
         )
+
+    caption = message.caption
+    if caption:
+        setattr(message, "text", caption)
 
     setattr(message, "mention", mention)
     data = json.loads(str(message))
