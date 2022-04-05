@@ -1,0 +1,43 @@
+version: '3.1'
+
+services:
+  es:
+    image: elasticsearch:8.1.2
+    restart: always
+    volumes:
+      - ./es_data:/usr/share/elasticsearch/data
+    environment:
+      discovery.type: "single-node"
+      xpack.security.enabled: false
+    ports:
+      - "127.0.0.1:9200:9200"
+
+  client:
+    image: bennythink/searchgram
+    env_file:
+      - env/gram.env
+    restart: always
+    depends_on:
+      - es
+    volumes:
+      - ./data/client.session:/SearchGram/searchgram/client.session
+    command:
+      - client.py
+
+  bot:
+    image: bennythink/searchgram
+    env_file:
+      - env/gram.env
+    restart: always
+    depends_on:
+      - es
+    volumes:
+      - ./data/bot.session:/SearchGram/searchgram/bot.session
+    command:
+      - bot.py
+
+#  kibana:
+#    image: kibana:8.1.2
+#    restart: on-failure
+#    ports:
+#      - "127.0.0.1:5601:5601"
