@@ -11,8 +11,9 @@ import logging
 
 from pyrogram import Client, filters, types
 
-from config import APP_HASH, APP_ID, OWNER_ID, TOKEN
+from config import OWNER_ID, TOKEN
 from es import TGES
+from init_client import get_client
 
 tges = TGES()
 logging.basicConfig(
@@ -21,9 +22,7 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 
-app = Client("session/bot", APP_ID, APP_HASH, bot_token=TOKEN,
-             # proxy={"hostname": "host.docker.internal", "port": 1080}
-             )
+app = get_client(TOKEN)
 
 
 @app.on_message(filters.command(["start"]))
