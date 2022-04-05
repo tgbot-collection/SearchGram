@@ -39,5 +39,6 @@ format:
 	chmod 777 es_data
 
 upgrade:
+	git pull
 	docker pull bennythink/searchgram
 	docker-compose up -d

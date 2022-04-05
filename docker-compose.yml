@@ -9,6 +9,8 @@ services:
     environment:
       discovery.type: "single-node"
       xpack.security.enabled: 'false'
+    logging:
+      driver: none
 
   client:
     image: bennythink/searchgram
