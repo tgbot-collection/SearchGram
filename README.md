@@ -92,6 +92,7 @@ cryptsetup status es_data
 mkfs.ext4 /dev/mapper/es_data
 mkdir -p es_data
 mount /dev/mapper/es_data ./es_data
+chmod 777 es_data
 ```
 
 ### 2.5 unmount and remove
