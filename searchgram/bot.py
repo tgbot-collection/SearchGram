@@ -8,6 +8,8 @@
 __author__ = "Benny <benny.think@gmail.com>"
 
 import logging
+import random
+import time
 
 from pyrogram import Client, filters, types
 
@@ -37,6 +39,7 @@ def search_handler(client: "Client", message: "types.Message"):
     results = tges.search(message.text)
     for result in results:
         t = "{} on {}\n`{}`".format(result["mention"], result['date'], result['text'])
+        time.sleep(random.random())
         client.send_message(message.chat.id, t, parse_mode="markdown")
 
 
