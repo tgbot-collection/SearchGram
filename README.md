@@ -13,6 +13,12 @@ Bug issues were submitted years ago but never fixed.
 
 I'm not planning to be sitting ducks, so I create a bot that can search for CJK languages.
 
+# Feature
+
+* support text message
+* support caption inside photo and document
+* support chat username
+
 # Theory
 
 1. Telegram allows multiple sessions, maximum is 10 clients.
@@ -25,6 +31,8 @@ I'm not planning to be sitting ducks, so I create a bot that can search for CJK 
 
 ![](assets/1.jpeg)
 
+![](assets/2.png)
+
 # Installation
 
 **Because chat history is very important and that should be kept privately always, so I don't offer any public bots.**
@@ -32,6 +40,8 @@ I'm not planning to be sitting ducks, so I create a bot that can search for CJK 
 ## 1. Prepare environment and clone this repository
 
 Install docker and docker-compose on your server, clone this repository to any directory you want.
+
+It's better to have more RAM because ElasticSearch is like Google Chrome.
 
 ## 2. (Optional) Prepare Encryption data volume
 
