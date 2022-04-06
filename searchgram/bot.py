@@ -9,16 +9,20 @@ __author__ = "Benny <benny.think@gmail.com>"
 
 import logging
 import random
+import tempfile
 import time
+from typing import Any, Union
 
 from pyrogram import Client, filters, types
 
 from config import OWNER_ID, TOKEN
 from engine import Mongo
+from history import HistoryImport
 from init_client import get_client
 from utils import apply_log_formatter
 
 apply_log_formatter()
+
 tgdb = Mongo()
 
 app = get_client(TOKEN)
@@ -47,6 +51,20 @@ def ping_handler(client: "Client", message: "types.Message"):
     client.send_chat_action(message.chat.id, "typing")
     text = tgdb.ping()
     client.send_message(message.chat.id, text, parse_mode="markdown")
+
+
+@app.on_message(filters.document & filters.incoming)
+@private_use
+def import_handler(client: "Client", message: "types.Message"):
+    client.send_chat_action(message.chat.id, "import_history")
+    bot_msg: Union["types.Message", "Any"] = message.reply_text("Staring to import history...", quote=True)
+    with tempfile.NamedTemporaryFile() as f:
+        client.send_chat_action(message.chat.id, "upload_document")
+        message.download(f.name)
+        with open(f.name, "rb") as f:
+            data = f.read()
+        runner = HistoryImport(bot_msg, data)
+        runner.load()
 
 
 @app.on_message(filters.text & filters.incoming)

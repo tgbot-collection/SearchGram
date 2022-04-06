@@ -18,6 +18,7 @@ I'm not planning to be sitting ducks, so I create a bot that can search for CJK 
 * support text message
 * support caption inside photo and document
 * support chat username
+* support import chat history, with json format
 
 # Theory
 
@@ -40,7 +41,6 @@ I'm not planning to be sitting ducks, so I create a bot that can search for CJK 
 ## 1. Prepare environment and clone this repository
 
 Install docker and docker-compose on your server, clone this repository to any directory you want.
-
 
 ## 2. (Optional) Prepare Encryption data volume
 
@@ -155,7 +155,7 @@ Now you can talk to your friends and search in your bot.
 
 # Roadmap and TODOs
 
-- [ ] import chat history
+- [x] import chat history
 
 # License
 

@@ -8,6 +8,7 @@
 __author__ = "Benny <benny.think@gmail.com>"
 
 import re
+
 import pymongo
 
 from config import MONGO_HOST
@@ -30,16 +31,6 @@ class Mongo:
 
     def __del__(self):
         self.client.close()
-
-    def is_admin(self, username: str) -> bool:
-        data = self.db["users"].find_one({"username": username, "group": {"$in": ["admin"]}})
-        if data:
-            return True
-
-    def is_user_blocked(self, username: str) -> str:
-        r = self.db["users"].find_one({"username": username, "status.disable": True})
-        if r:
-            return r["status"]["reason"]
 
     def insert(self, doc: "dict"):
         resp = self.col.insert_one(doc)
