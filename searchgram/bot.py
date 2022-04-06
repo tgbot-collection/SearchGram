@@ -24,23 +24,43 @@ tgdb = Mongo()
 app = get_client(TOKEN)
 
 
+def private_use(func):
+    def wrapper(client: "Client", message: "types.Message"):
+        chat_id = getattr(message.chat, "id", None)
+        if chat_id != int(OWNER_ID):
+            logging.warning("Unauthorized user: %s", chat_id)
+            return
+        return func(client, message)
+
+    return wrapper
+
+
 @app.on_message(filters.command(["start"]))
 def search_handler(client: "Client", message: "types.Message"):
-    # process as chat.id, not from_user.id
+    client.send_chat_action(message.chat.id, "typing")
     message.reply_text("Hello, I'm search bot.", quote=True)
 
 
+@app.on_message(filters.command(["ping"]))
+@private_use
+def ping_handler(client: "Client", message: "types.Message"):
+    client.send_chat_action(message.chat.id, "typing")
+    text = tgdb.ping()
+    client.send_message(message.chat.id, text, parse_mode="markdown")
+
+
 @app.on_message(filters.text & filters.incoming)
+@private_use
 def search_handler(client: "Client", message: "types.Message"):
-    # process as chat.id, not from_user.id
-    if message.chat.id != int(OWNER_ID):
-        logging.warning("Unauthorized user: %s", message.from_user.id)
-        return
+    client.send_chat_action(message.chat.id, "typing")
     results = tgdb.search(message.text)
     for result in results:
         t = "{} on {}\n`{}`".format(result["mention"], result['date'], result['text'])
         time.sleep(random.random())
         client.send_message(message.chat.id, t, parse_mode="markdown")
+
+    if not results:
+        client.send_message(message.chat.id, "No results found.")
 
 
 if __name__ == '__main__':

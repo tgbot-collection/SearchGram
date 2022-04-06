@@ -7,9 +7,18 @@
 
 __author__ = "Benny <benny.think@gmail.com>"
 
+import re
 import pymongo
 
 from config import MONGO_HOST
+
+
+def sizeof_fmt(num: int, suffix='B'):
+    for unit in ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi']:
+        if abs(num) < 1024.0:
+            return "%3.1f%s%s" % (num, unit, suffix)
+        num /= 1024.0
+    return "%.1f%s%s" % (num, 'Yi', suffix)
 
 
 class Mongo:
@@ -38,12 +47,19 @@ class Mongo:
 
     def search(self, text):
         results = []
+        # support for fuzzy search
+        text = re.sub(r"\s+", ".*", text)
         data = self.col.find({"text": {'$regex': f'.*{text}.*', "$options": "-i"}})
         for hit in data:
             hit.pop("_id")
             results.append(hit)
 
         return results
+
+    def ping(self):
+        count = self.col.count_documents({})
+        size = self.db.command("dbstats")["storageSize"]
+        return f"{count} messages, {sizeof_fmt(size)}"
 
 
 if __name__ == '__main__':
