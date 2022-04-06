@@ -14,7 +14,6 @@ import time
 import traceback
 
 import fakeredis
-from tqdm import tqdm
 
 from engine import Mongo
 
@@ -50,7 +49,7 @@ class HistoryImport:
         total = current = 0
         for i in data["chats"]["list"]:
             total += len(i["messages"])
-        for chat in tqdm(data["chats"]["list"]):
+        for chat in data["chats"]["list"]:
             self.__edit_text(f"Importing... {current}/{total}")
             template = "[{}](tg://user?id={}) to [{}](tg://user?id={})"
             opposite_name = chat.get("name", chat["type"])
