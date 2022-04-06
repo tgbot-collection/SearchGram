@@ -69,3 +69,19 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+      - name: executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@master
+        env:
+          TOKEN: ${{ secrets.BOT_TOKEN }}
+        with:
+          envs: TOKEN
+          host: ${{ secrets.PROD_HOST }}
+          username: root
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            docker save bennythink/searchgram > /root/searchgram-old.tar
+            docker pull bennythink/searchgram
+            docker-compose -f ~/SearchGram/docker-compose.yml up -d
+            curl "https://api.telegram.org/bot$TOKEN/sendMessage?chat_id=260260121&text=SearchGram%20upgrade%20complete!"
+            echo "SearchGram upgrade complete!"
