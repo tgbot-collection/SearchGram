@@ -1,5 +1,5 @@
 pyrogram==1.4.12
 tgcrypto==1.2.3
 pymongo==4.1.0
-fakeredis==1.7.0
+fakeredis==1.7.1
 zhconv==1.4.3
