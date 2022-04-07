@@ -10,6 +10,7 @@ __author__ = "Benny <benny.think@gmail.com>"
 import re
 
 import pymongo
+import zhconv
 
 from config import MONGO_HOST
 
@@ -37,10 +38,21 @@ class Mongo:
         return resp
 
     def search(self, text):
-        results = []
         # support for fuzzy search
         text = re.sub(r"\s+", ".*", text)
-        data = self.col.find({"text": {'$regex': f'.*{text}.*', "$options": "-i"}})
+
+        hans = zhconv.convert(text, "zh-hans")
+        hant = zhconv.convert(text, "zh-hant")
+        results = []
+        data = self.col.find(
+            {
+                "$or":
+                    [
+                        {"text": {'$regex': f'.*{hans}.*', "$options": "-i"}},
+                        {"text": {'$regex': f'.*{hant}.*', "$options": "-i"}}
+                    ]
+            }
+        )
         for hit in data:
             hit.pop("_id")
             results.append(hit)
