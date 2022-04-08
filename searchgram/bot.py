@@ -45,6 +45,19 @@ def search_handler(client: "Client", message: "types.Message"):
     message.reply_text("Hello, I'm search bot.", quote=True)
 
 
+@app.on_message(filters.command(["user"]))
+@private_use
+def search_in_user_handler(client: "Client", message: "types.Message"):
+    client.send_chat_action(message.chat.id, "typing")
+    if message.text == "/user":
+        message.reply_text("Command format: /user username|id|firstname keyword")
+        return
+
+    _, user, keyword = message.text.split(maxsplit=2)
+    results = tgdb.search(keyword, user)
+    send_search_results(message.chat.id, results)
+
+
 @app.on_message(filters.command(["ping"]))
 @private_use
 def ping_handler(client: "Client", message: "types.Message"):
@@ -72,13 +85,16 @@ def import_handler(client: "Client", message: "types.Message"):
 def search_handler(client: "Client", message: "types.Message"):
     client.send_chat_action(message.chat.id, "typing")
     results = tgdb.search(message.text)
+    send_search_results(message.chat.id, results)
+
+
+def send_search_results(chat_id, results):
     for result in results:
         t = "{} on {}\n`{}`".format(result["mention"], result['date'], result['text'])
         time.sleep(random.random())
-        client.send_message(message.chat.id, t, parse_mode="markdown")
-
+        app.send_message(chat_id, t, parse_mode="markdown")
     if not results:
-        client.send_message(message.chat.id, "No results found.")
+        app.send_message(chat_id, "No results found.")
 
 
 if __name__ == '__main__':

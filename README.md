@@ -19,7 +19,7 @@ I'm not planning to be sitting ducks, so I create a bot that can search for CJK 
 * support caption inside photo and document
 * support chat username
 * support import chat history, with json format
-
+* search for one specific user: `/user <username>|<id>|<firstname> keyword`
 # Theory
 
 1. Telegram allows multiple sessions, maximum is 10 clients.

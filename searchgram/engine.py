@@ -37,22 +37,44 @@ class Mongo:
         resp = self.col.insert_one(doc)
         return resp
 
-    def search(self, text):
-        # support for fuzzy search
-        text = re.sub(r"\s+", ".*", text)
+    @staticmethod
+    def __clean_user(user: "str"):
+        if user.isdigit():
+            return int(user)
+        if user.startswith("@"):
+            return user[1:]
+        if user.startswith("https://t.me/"):
+            return user[13:]
+        return user
 
-        hans = zhconv.convert(text, "zh-hans")
-        hant = zhconv.convert(text, "zh-hant")
+    def search(self, keyword, user=None):
+        # support for fuzzy search
+        keyword = re.sub(r"\s+", ".*", keyword)
+
+        hans = zhconv.convert(keyword, "zh-hans")
+        hant = zhconv.convert(keyword, "zh-hant")
         results = []
-        data = self.col.find(
-            {
-                "$or":
-                    [
-                        {"text": {'$regex': f'.*{hans}.*', "$options": "-i"}},
-                        {"text": {'$regex': f'.*{hant}.*', "$options": "-i"}}
-                    ]
-            }
-        )
+        filter_ = {
+            "$or":
+                [
+                    {"text": {'$regex': f'.*{hans}.*', "$options": "-i"}},
+                    {"text": {'$regex': f'.*{hant}.*', "$options": "-i"}}
+                ]
+        }
+        if user:
+            user = self.__clean_user(user)
+            filter_["$and"] = [
+                {"$or": [
+                    {"from_user.id": user},
+                    {"from_user.username": {'$regex': f'.*{user}.*', "$options": "-i"}},
+                    {"from_user.first_name": {'$regex': f'.*{user}.*', "$options": "-i"}},
+
+                    {"chat.id": user},
+                    {"chat.username": {'$regex': f'.*{user}.*', "$options": "-i"}},
+                    {"chat.first_name": {'$regex': f'.*{user}.*', "$options": "-i"}},
+                ]}
+            ]
+        data = self.col.find(filter_)
         for hit in data:
             hit.pop("_id")
             results.append(hit)
@@ -67,5 +89,5 @@ class Mongo:
 
 if __name__ == '__main__':
     tges = Mongo()
-    for i in tges.search("醉了"):
-        print(i["text"])
+    for i in tges.search("干扰项"):
+        print(i["text"], i["mention"])
