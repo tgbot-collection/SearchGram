@@ -8,12 +8,11 @@
 __author__ = "Benny <benny.think@gmail.com>"
 
 import logging
-import random
 import tempfile
-import time
 from typing import Any, Union
 
 from pyrogram import Client, filters, types
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 
 from config import OWNER_ID, TOKEN
 from engine import Mongo
@@ -89,12 +88,80 @@ def search_handler(client: "Client", message: "types.Message"):
 
 
 def send_search_results(chat_id, results):
-    for result in results:
-        t = "{} on {}\n`{}`".format(result["mention"], result['date'], result['text'])
-        time.sleep(random.random())
-        app.send_message(chat_id, t, parse_mode="markdown")
     if not results:
         app.send_message(chat_id, "No results found.")
+
+    next_button = InlineKeyboardButton(
+        "Next Page",
+        callback_data="n|0"  # current index
+    )
+    final = ""
+    for result in results:
+        final += "{} on {}\n`{}`\r".format(result["mention"], result['date'], result['text'])
+    list_data = final.split("\r")
+    length = 1000
+    group_data = []
+    element = ""
+    for text in list_data:
+        if len(element) + len(text) <= length:
+            element += f"{text}\n"
+        else:
+            group_data.append(element)
+            element = f"{text}\n"
+        if list_data.index(text) == len(list_data) - 1:
+            group_data.append(element)
+
+    if not group_data:
+        group_data = [element]
+    if len(group_data) > 1:
+        markup = InlineKeyboardMarkup(
+            [
+                [
+                    next_button
+                ]
+            ]
+        )
+    else:
+        markup = None
+
+    hint = "**Total {} pages.**\n\n".format(len(group_data))
+    bot_msg = app.send_message(chat_id, hint + group_data[0], parse_mode="markdown", reply_markup=markup)
+    tgdb.insert_history({"message_id": bot_msg.message_id, "messages": group_data})
+
+
+@app.on_callback_query(filters.regex(r"n|p"))
+def send_method_callback(client: "Client", callback_query: types.CallbackQuery):
+    call_data = callback_query.data.split("|")
+    direction, cursor = call_data[0], int(call_data[1])
+    message = callback_query.message
+    if direction == "n":
+        cursor += 1
+    elif direction == "p":
+        cursor -= 1
+    else:
+        raise ValueError("Invalid direction")
+    data = tgdb.find_history(message.message_id)
+    current_data = data["messages"][cursor]
+    total_count = len(data["messages"])
+
+    next_button = InlineKeyboardButton(
+        "Next Page",
+        callback_data=f"n|{cursor}"
+    )
+    previous_button = InlineKeyboardButton(
+        "Previous Page",
+        callback_data=f"p|{cursor}"
+    )
+
+    if cursor == 0:
+        markup_content = [next_button]
+    elif cursor + 1 == total_count:
+        markup_content = [previous_button]
+    else:
+        markup_content = [previous_button, next_button]
+
+    markup = InlineKeyboardMarkup([markup_content])
+    message.edit_text(current_data, reply_markup=markup)
 
 
 if __name__ == '__main__':

@@ -29,6 +29,7 @@ class Mongo:
                                           connectTimeoutMS=5000, serverSelectionTimeoutMS=5000)
         self.db = self.client["telegram"]
         self.col = self.db["chat"]
+        self.history = self.db["history"]
 
     def __del__(self):
         self.client.close()
@@ -85,6 +86,12 @@ class Mongo:
         count = self.col.count_documents({})
         size = self.db.command("dbstats")["storageSize"]
         return f"{count} messages, {sizeof_fmt(size)}"
+
+    def insert_history(self, doc):
+        self.history.insert_one(doc)
+
+    def find_history(self, msg_id):
+        return self.history.find_one({"message_id": msg_id})
 
 
 if __name__ == '__main__':
