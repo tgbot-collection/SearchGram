@@ -35,7 +35,9 @@ I'm not planning to be sitting ducks, so I create a bot that can search for CJK 
 
 ![](assets/2.png)
 
-![](assets/pagination.mp4)
+
+https://user-images.githubusercontent.com/14024832/164222317-ea6b228c-bda3-4983-afd7-7bc8f6af5409.mp4
+
 
 # Installation
 
