@@ -1,4 +1,4 @@
-pyrogram==1.4.15
+pyrogram==2.0.14
 tgcrypto==1.2.3
 pymongo==4.1.1
 fakeredis==1.7.1
