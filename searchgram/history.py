@@ -35,7 +35,7 @@ class HistoryImport:
         return int(re.sub(r"(\D)+", "", user_info))
 
     def __edit_text(self, new_text):
-        key = f"{self.__bm.chat.id}-{self.__bm.message_id}"
+        key = f"{self.__bm.chat.id}-{self.__bm.id}"
         # if the key exists, we shouldn't send edit message
         if not self.__r.exists(key):
             time.sleep(random.random())

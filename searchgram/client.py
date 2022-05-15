@@ -33,12 +33,12 @@ def message_handler(client: "Client", message: "types.Message"):
     template = "[{}](tg://user?id={}) to [{}](tg://user?id={})"
     if message.outgoing:
         mention = template.format(
-            message.from_user.first_name, message.from_user.id,
+            getattr(message.from_user, "first_name", None), message.from_user.id,
             message.chat.first_name, message.chat.id
         )
     else:
         mention = template.format(
-            message.from_user.first_name, message.from_user.id,
+            getattr(message.from_user, "first_name", None), message.from_user.id,
             "me", OWNER_ID
         )
 
