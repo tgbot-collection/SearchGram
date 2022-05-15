@@ -11,8 +11,8 @@ import logging
 import tempfile
 from typing import Any, Union
 
-from pyrogram import Client, filters, types
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from pyrogram import Client, filters, types, enums
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from config import OWNER_ID, TOKEN
 from engine import Mongo
@@ -40,14 +40,14 @@ def private_use(func):
 
 @app.on_message(filters.command(["start"]))
 def search_handler(client: "Client", message: "types.Message"):
-    client.send_chat_action(message.chat.id, "typing")
+    client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
     message.reply_text("Hello, I'm search bot.", quote=True)
 
 
 @app.on_message(filters.command(["user"]))
 @private_use
 def search_in_user_handler(client: "Client", message: "types.Message"):
-    client.send_chat_action(message.chat.id, "typing")
+    client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
     if message.text == "/user":
         message.reply_text("Command format: /user username|id|firstname keyword")
         return
@@ -60,21 +60,21 @@ def search_in_user_handler(client: "Client", message: "types.Message"):
 @app.on_message(filters.command(["ping"]))
 @private_use
 def ping_handler(client: "Client", message: "types.Message"):
-    client.send_chat_action(message.chat.id, "typing")
+    client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
     text = tgdb.ping()
-    client.send_message(message.chat.id, text, parse_mode="markdown")
+    client.send_message(message.chat.id, text, parse_mode=enums.ParseMode.MARKDOWN)
 
 
 @app.on_message(filters.document & filters.incoming)
 @private_use
 def import_handler(client: "Client", message: "types.Message"):
-    client.send_chat_action(message.chat.id, "import_history")
+    client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
     bot_msg: Union["types.Message", "Any"] = message.reply_text("Staring to import history...", quote=True)
     with tempfile.NamedTemporaryFile() as f:
-        client.send_chat_action(message.chat.id, "upload_document")
+        client.send_chat_action(message.chat.id, enums.ChatAction.UPLOAD_DOCUMENT)
         message.download(f.name)
-        with open(f.name, "rb") as f:
-            data = f.read()
+        with open(f.name, "rb") as f2:
+            data = f2.read()
         runner = HistoryImport(bot_msg, data)
         runner.load()
 
@@ -82,7 +82,7 @@ def import_handler(client: "Client", message: "types.Message"):
 @app.on_message(filters.text & filters.incoming)
 @private_use
 def search_handler(client: "Client", message: "types.Message"):
-    client.send_chat_action(message.chat.id, "typing")
+    client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
     results = tgdb.search(message.text)
     send_search_results(message.chat.id, results)
 
@@ -140,7 +140,7 @@ def send_method_callback(client: "Client", callback_query: types.CallbackQuery):
         cursor -= 1
     else:
         raise ValueError("Invalid direction")
-    data = tgdb.find_history(message.message_id)
+    data = tgdb.find_history(message.id)
     current_data = data["messages"][cursor]
     total_count = len(data["messages"])
 
