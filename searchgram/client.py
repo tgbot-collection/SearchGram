@@ -65,12 +65,16 @@ def sync_history():
 
         for uid, enabled in config.items(section):
             if enabled.lower() != "false":
+                total_count = app.get_chat_history_count(uid)
                 log = f"Syncing history for {uid}"
                 logging.info(log)
                 safe_edit(saved, log)
                 time.sleep(random.random())  # avoid flood
                 chat_records = app.get_chat_history(uid)
+                current = 0
                 for msg in chat_records:
+                    safe_edit(saved, f"[{current}/{total_count}] - {log}")
+                    current += 1
                     tgdb.update(msg)
                 # single chat sync complete, we'll set sync enable to 'false' to avoid further flooding
                 config.set(section, uid, 'false')
