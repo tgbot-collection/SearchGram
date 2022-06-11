@@ -7,12 +7,14 @@
 
 __author__ = "Benny <benny.think@gmail.com>"
 
+import json
 import re
 
 import pymongo
 import zhconv
 
 from config import MONGO_HOST
+from utils import set_mention
 
 
 def sizeof_fmt(num: int, suffix='B'):
@@ -92,6 +94,25 @@ class Mongo:
 
     def find_history(self, msg_id):
         return self.history.find_one({"message_id": msg_id})
+
+    def update(self, doc):
+        msg_id = doc.id
+        chat_id = doc.chat.id
+
+        set_mention(doc)
+        doc = json.loads(str(doc))
+
+        self.col.update_one(
+            {
+                "chat.id": chat_id,
+                "$or": [
+                    {"id": {"$eq": msg_id}},
+                    {"message_id": {"$eq": msg_id}}
+                ]
+            },
+            {"$setOnInsert": doc},
+            upsert=True
+        )
 
 
 if __name__ == '__main__':

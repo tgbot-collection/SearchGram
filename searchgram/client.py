@@ -7,15 +7,20 @@
 
 __author__ = "Benny <benny.think@gmail.com>"
 
+import configparser
 import json
 import logging
+import random
+import threading
+import time
 
+import fakeredis
 from pyrogram import Client, filters, types
 
-from config import BOT_ID, OWNER_ID
+from config import BOT_ID
 from engine import Mongo
 from init_client import get_client
-from utils import apply_log_formatter
+from utils import apply_log_formatter, set_mention
 
 apply_log_formatter()
 
@@ -30,26 +35,54 @@ def message_handler(client: "Client", message: "types.Message"):
         logging.debug("Ignoring message from bot itself")
         return
 
-    template = "[{}](tg://user?id={}) to [{}](tg://user?id={})"
-    if message.outgoing:
-        mention = template.format(
-            getattr(message.from_user, "first_name", None), message.from_user.id,
-            message.chat.first_name, message.chat.id
-        )
-    else:
-        mention = template.format(
-            getattr(message.from_user, "first_name", None), message.from_user.id,
-            "me", OWNER_ID
-        )
-
-    caption = message.caption
-    if caption:
-        setattr(message, "text", caption)
-
-    setattr(message, "mention", mention)
+    set_mention(message)
     data = json.loads(str(message))
     tgdb.insert(data)
 
 
+def safe_edit(msg, new_text):
+    key = "sync-chat"
+    r = fakeredis.FakeStrictRedis()
+    if not r.exists(key):
+        time.sleep(random.random())
+        r.set(key, "ok", ex=2)
+        msg.edit_text(new_text)
+
+
+def sync_history():
+    time.sleep(5)
+    section = "chat"
+    config = configparser.ConfigParser(allow_no_value=True)
+    config.read('sync.ini')
+
+    enable = False
+    for _, i in config.items(section):
+        if i.lower() != "false":
+            enable = True
+
+    if enable:
+        saved = app.send_message("me", "Starting to sync history...")
+
+        for uid, enabled in config.items(section):
+            if enabled.lower() != "false":
+                log = f"Syncing history for {uid}"
+                logging.info(log)
+                safe_edit(saved, log)
+                time.sleep(random.random())  # avoid flood
+                chat_records = app.get_chat_history(uid)
+                for msg in chat_records:
+                    tgdb.update(msg)
+                # single chat sync complete, we'll set sync enable to 'false' to avoid further flooding
+                config.set(section, uid, 'false')
+
+        with open('sync.ini', 'w') as configfile:
+            config.write(configfile)
+
+        log = "Sync history complete"
+        logging.info(log)
+        safe_edit(saved, log)
+
+
 if __name__ == '__main__':
+    threading.Thread(target=sync_history).start()
     app.run()

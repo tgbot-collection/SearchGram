@@ -1,6 +1,6 @@
 # SearchGram
 
-A telegram Bot that can search for CJK and other languages.
+A telegram Bot that can search for CJK and other languages, as well as message backup utility.
 
 # Introduction
 
@@ -17,8 +17,9 @@ I'm not planning to be sitting ducks, so I create a bot that can search for CJK 
 
 * support text message
 * support caption inside photo and document
-* support chat username
-* support import chat history, with json format
+* support chat username hints
+* support import user supplied chat history
+* support seamless sync specified chat history in background
 * search for one specific user: `/user <username>|<id>|<firstname> keyword`
 
 # Theory
@@ -27,7 +28,11 @@ I'm not planning to be sitting ducks, so I create a bot that can search for CJK 
 2. We create a hidden session
 3. We use this session to store all your incoming and outgoing text messages to MongoDB
 4. We create another bot to search MongoDB
-5. We return the whole sentense, so you could use Telegram's built-in buggy search feature.
+5. We return the whole sentence, so you could use Telegram's built-in buggy search feature.
+
+What about history chats before running this bot?
+
+Don't worry, we can either import your history chats, or use config file to sync your history chats.
 
 # Screenshots
 
@@ -35,13 +40,11 @@ I'm not planning to be sitting ducks, so I create a bot that can search for CJK 
 
 ![](assets/2.png)
 
-
 https://user-images.githubusercontent.com/14024832/164222317-ea6b228c-bda3-4983-afd7-7bc8f6af5409.mp4
-
 
 # Installation
 
-**Because chat history is very important and that should be kept privately always, so I don't offer any public bots.**
+**Because chat history is very important and it should be always kept privately, so I don't offer any public bots.**
 
 ## 1. Prepare environment and clone this repository
 
@@ -126,7 +129,7 @@ cryptsetup luksClose mongo_data
 
 ```shell
 # vim env/gram.env
-TOKEN=3token
+TOKEN=token
 APP_ID=id
 APP_HASH=hash
 OWNER_ID=your user_id
@@ -150,6 +153,23 @@ Follow the instruction to log in to your account.
 When you see 'started xxx handlers', Ctrl + D to exit. You should find session file
 under `searchgram/session/client.session`.
 
+## 6. (optional)setup sync id
+
+If you would like to sync all the chat history for any user, group or channel, you can configure sync id.
+
+First thing you need is obtaining chat peer, it could be integer or username. Use https://t.me/blog_update_bot to get
+what
+you want.
+
+Secondly, you'll have to manually edit `sync.ini`
+
+```ini
+[chat]
+123456 = true # will sync this chat
+789 = false # won't sync this
+BennyThink # will sync this
+```
+
 ## 6. Up and running
 
 ```shell
@@ -158,9 +178,12 @@ docker-compose up -d
 
 Now you can talk to your friends and search in your bot.
 
+If you configure sync id, you can monitor sync status in Saved Messages.
+
 # Roadmap and TODOs
 
-- [x] import chat history
+- [x] chat history
+- [ ] jieba
 
 # License
 
