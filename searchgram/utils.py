@@ -35,12 +35,12 @@ def set_mention(message):
     template = "[{}](tg://user?id={}) to [{}](tg://user?id={})"
     if message.outgoing:
         mention = template.format(
-            get_fullname(message.from_user), message.from_user.id,
-            get_fullname(message.chat), message.chat.id
+            get_fullname(message.from_user), getattr(message.from_user, "id", 0),
+            get_fullname(message.chat), getattr(message.chat, "id", 0)
         )
     else:
         mention = template.format(
-            get_fullname(message.from_user), message.from_user.id,
+            get_fullname(message.from_user), getattr(message.from_user, "id", 0),
             "me", OWNER_ID
         )
 
