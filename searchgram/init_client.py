@@ -7,17 +7,23 @@
 
 __author__ = "Benny <benny.think@gmail.com>"
 
+import json
+
 from pyrogram import Client
 
 from config import APP_HASH, APP_ID, PROXY
 
 
 def get_client(token=None):
+    if isinstance(PROXY, str):
+        proxy = json.loads(PROXY)
+    else:
+        proxy = PROXY
     if token:
         return Client("session/bot", APP_ID, APP_HASH, bot_token=token,
-                      proxy=PROXY
+                      proxy=proxy
                       )
     else:
         return Client("session/client", APP_ID, APP_HASH,
-                      proxy=PROXY
+                      proxy=proxy
                       )
