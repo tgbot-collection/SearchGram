@@ -20,16 +20,27 @@ def apply_log_formatter():
     )
 
 
+def get_fullname(obj):
+    # obj is chat or from_user
+    name = ""
+    if getattr(obj, "first_name", None):
+        name += obj.first_name
+    if getattr(obj, "last_name", None):
+        name += " " + obj.last_name
+
+    return name.strip()
+
+
 def set_mention(message):
     template = "[{}](tg://user?id={}) to [{}](tg://user?id={})"
     if message.outgoing:
         mention = template.format(
-            getattr(message.from_user, "first_name", None), message.from_user.id,
-            message.chat.first_name, message.chat.id
+            get_fullname(message.from_user), message.from_user.id,
+            get_fullname(message.chat), message.chat.id
         )
     else:
         mention = template.format(
-            getattr(message.from_user, "first_name", None), message.from_user.id,
+            get_fullname(message.from_user), message.from_user.id,
             "me", OWNER_ID
         )
 
