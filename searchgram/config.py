@@ -13,6 +13,8 @@ APP_ID = int(os.getenv("APP_ID", 1234))
 APP_HASH = os.getenv("APP_HASH", "1234da")
 TOKEN = os.getenv("TOKEN", "abchw")
 MONGO_HOST = os.getenv("MONGO_HOST", "mongo")
+OWNER_ID = os.getenv("OWNER_ID", "123456")
+BOT_ID = os.getenv("BOT_ID", "123466771")
 
 PROXY = os.getenv("PROXY")
 # example proxy configuration

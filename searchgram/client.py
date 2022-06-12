@@ -26,6 +26,7 @@ apply_log_formatter()
 
 app = get_client()
 tgdb = Mongo()
+r = fakeredis.FakeStrictRedis()
 
 
 @app.on_message(filters.outgoing | filters.incoming)
@@ -42,7 +43,6 @@ def message_handler(client: "Client", message: "types.Message"):
 
 def safe_edit(msg, new_text):
     key = "sync-chat"
-    r = fakeredis.FakeStrictRedis()
     if not r.exists(key):
         time.sleep(random.random())
         r.set(key, "ok", ex=2)
