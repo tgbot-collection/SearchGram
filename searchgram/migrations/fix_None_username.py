@@ -7,7 +7,6 @@
 
 __author__ = "Benny <benny.think@gmail.com>"
 
-import os
 import sys
 
 sys.path.append("../")
