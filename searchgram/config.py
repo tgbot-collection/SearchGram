@@ -14,5 +14,6 @@ APP_HASH = os.getenv("APP_HASH", "1234da")
 TOKEN = os.getenv("TOKEN", "abchw")
 MONGO_HOST = os.getenv("MONGO_HOST", "mongo")
 
-OWNER_ID = os.getenv("OWNER_ID")
-BOT_ID = os.getenv("BOT_ID")
+PROXY = os.getenv("PROXY")
+# example proxy configuration
+# PROXY = {"scheme": "socks5", "hostname": "localhost", "port": 1080}

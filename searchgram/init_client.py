@@ -9,17 +9,15 @@ __author__ = "Benny <benny.think@gmail.com>"
 
 from pyrogram import Client
 
-from config import APP_HASH, APP_ID
+from config import APP_HASH, APP_ID, PROXY
 
 
 def get_client(token=None):
-    proxy = None
-    # proxy = {"hostname": "host.docker.internal", "port": 1080}
     if token:
         return Client("session/bot", APP_ID, APP_HASH, bot_token=token,
-                      proxy=proxy
+                      proxy=PROXY
                       )
     else:
         return Client("session/client", APP_ID, APP_HASH,
-                      proxy=proxy
+                      proxy=PROXY
                       )
