@@ -3,4 +3,4 @@ tgcrypto==1.2.3
 pymongo==4.1.1
 fakeredis==1.8.1
 zhconv==1.4.3
-tqdm==4.61.1
+tqdm==4.64.0
