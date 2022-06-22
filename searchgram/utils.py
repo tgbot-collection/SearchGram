@@ -28,7 +28,10 @@ def get_fullname(obj):
     if getattr(obj, "last_name", None):
         name += " " + obj.last_name
 
-    return name.strip()
+    name = name.strip()
+    if not name:
+        name = getattr(obj, "title", "")
+    return name
 
 
 def set_mention(message):
