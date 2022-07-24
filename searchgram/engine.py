@@ -77,7 +77,7 @@ class Mongo:
                     {"chat.first_name": {'$regex': f'.*{user}.*', "$options": "-i"}},
                 ]}
             ]
-        data = self.col.find(filter_)
+        data = self.col.find(filter_).sort("date", pymongo.DESCENDING)
         for hit in data:
             hit.pop("_id")
             results.append(hit)
