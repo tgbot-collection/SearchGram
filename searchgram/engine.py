@@ -40,6 +40,12 @@ class Mongo:
         resp = self.col.insert_one(doc)
         return resp
 
+    def edit(self, condition, body):
+        # first alter field name
+        self.col.update_one(condition, {"$rename": {"text": "old_text.{}".format(body["edit_date"])}})
+        # then add new field text
+        self.col.update_one(condition, {"$set": {"text": body["text"]}})
+
     @staticmethod
     def __clean_user(user: "str"):
         if user.isdigit():

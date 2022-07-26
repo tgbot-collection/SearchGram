@@ -41,6 +41,21 @@ def message_handler(client: "Client", message: "types.Message"):
     tgdb.insert(data)
 
 
+@app.on_edited_message()
+def message_edit_handler(client: "Client", message: "types.Message"):
+    # don't know why `~filters.chat(int(BOT_ID))` is not working
+    if str(message.chat.id) == BOT_ID:
+        logging.debug("Ignoring message from bot itself")
+        return
+    chat_id = message.chat.id
+    msg_id = message.id
+    new_text = message.text
+    edit_date = str(message.edit_date)
+    cond = {'chat.id': chat_id, 'id': msg_id}
+    body = {'text': new_text, 'edit_date': edit_date}
+    tgdb.edit(cond, body)
+
+
 def safe_edit(msg, new_text):
     key = "sync-chat"
     if not r.exists(key):
