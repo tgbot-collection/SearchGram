@@ -7,6 +7,7 @@
 
 __author__ = "Benny <benny.think@gmail.com>"
 
+import contextlib
 import json
 import re
 
@@ -48,7 +49,7 @@ class Mongo:
 
     @staticmethod
     def __clean_user(user: "str"):
-        if user.isdigit():
+        with contextlib.suppress(Exception):
             return int(user)
         if user.startswith("@"):
             return user[1:]
