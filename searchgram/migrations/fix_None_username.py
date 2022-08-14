@@ -15,7 +15,7 @@ from tqdm import tqdm
 from utils import set_mention
 
 tgdb = Mongo()
-cond = {"mention": {'$regex': '.*None.*', "$options": "-i"}}
+cond = {"mention": {'$regex': '.*None.*', "$options": "i"}}
 data = tgdb.col.find(cond)
 total_count = tgdb.col.count_documents(cond)
 

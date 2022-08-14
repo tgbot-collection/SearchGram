@@ -90,6 +90,7 @@ def search_handler(client: "Client", message: "types.Message"):
 def send_search_results(chat_id, results):
     if not results:
         app.send_message(chat_id, "No results found.")
+        return
 
     next_button = InlineKeyboardButton(
         "Next Page",

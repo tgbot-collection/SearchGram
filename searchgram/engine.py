@@ -66,8 +66,8 @@ class Mongo:
         filter_ = {
             "$or":
                 [
-                    {"text": {'$regex': f'.*{hans}.*', "$options": "-i"}},
-                    {"text": {'$regex': f'.*{hant}.*', "$options": "-i"}}
+                    {"text": {'$regex': f'.*{hans}.*', "$options": "i"}},
+                    {"text": {'$regex': f'.*{hant}.*', "$options": "i"}}
                 ]
         }
         if user:
@@ -75,12 +75,12 @@ class Mongo:
             filter_["$and"] = [
                 {"$or": [
                     {"from_user.id": user},
-                    {"from_user.username": {'$regex': f'.*{user}.*', "$options": "-i"}},
-                    {"from_user.first_name": {'$regex': f'.*{user}.*', "$options": "-i"}},
+                    {"from_user.username": {'$regex': f'.*{user}.*', "$options": "i"}},
+                    {"from_user.first_name": {'$regex': f'.*{user}.*', "$options": "i"}},
 
                     {"chat.id": user},
-                    {"chat.username": {'$regex': f'.*{user}.*', "$options": "-i"}},
-                    {"chat.first_name": {'$regex': f'.*{user}.*', "$options": "-i"}},
+                    {"chat.username": {'$regex': f'.*{user}.*', "$options": "i"}},
+                    {"chat.first_name": {'$regex': f'.*{user}.*', "$options": "i"}},
                 ]}
             ]
         data = self.col.find(filter_).sort("date", pymongo.DESCENDING)
