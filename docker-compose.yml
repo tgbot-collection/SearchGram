@@ -26,7 +26,7 @@ services:
       - bot.py
 
   mongo:
-    image: mongo
+    image: mongo:6
     restart: always
     volumes:
       - ./mongo_data/mongodb:/data/db
