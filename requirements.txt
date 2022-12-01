@@ -1,6 +1,6 @@
 pyrogram==2.0.59
 tgcrypto==1.2.4
 pymongo==4.3.2
-fakeredis==1.10.0
+fakeredis==2.1.0
 zhconv==1.4.3
 tqdm==4.64.1
