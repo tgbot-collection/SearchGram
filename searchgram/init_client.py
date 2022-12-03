@@ -9,7 +9,7 @@ __author__ = "Benny <benny.think@gmail.com>"
 
 import contextlib
 import json
-import subprocess
+import urllib.request
 
 from pyrogram import Client
 
@@ -33,6 +33,7 @@ def get_client(token=None):
 
 
 def get_revision():
-    with contextlib.suppress(subprocess.SubprocessError):
-        return subprocess.check_output("git -C ../ rev-parse --short HEAD".split()).decode("u8").replace("\n", "")
+    url = 'https://api.github.com/repos/tgbot-collection/SearchGram/commits/master'
+    with contextlib.suppress(Exception):
+        return json.loads(urllib.request.urlopen(url).read())['sha'][:7]
     return "0.0.1"

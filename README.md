@@ -55,7 +55,7 @@ https://user-images.githubusercontent.com/14024832/164222317-ea6b228c-bda3-4983-
 * Install MongoDB from here: https://www.mongodb.com/download/
 * Apply for APP_ID and APP_HASH from here: https://my.telegram.org/
 * Talk to https://t.me/BotFather to get your bot token
-* Talk to https://t.me/blog_update_bot to get your user id and your bot's id
+* Talk to https://t.me/blog_update_bot to get your user id
 
 ## 2. Modify environment file
 
