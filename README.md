@@ -64,13 +64,12 @@ Use your favorite editor to modify `config.py`, example:
 ```python
 APP_ID = 176552
 APP_HASH = "667276jkajhw"
-TOKEN = "bottoekn:8hjhad"
+TOKEN = "123456:8hjhad"
 MONGO_HOST = "localhost"
 OWNER_ID = "2311231"
-BOT_ID = "83277"
 ```
 
-If your network is limited(like in China), you need to setup proxy.
+If your network is limited(like in China), you need to setup proxy:
 
 ```python
 PROXY = {"scheme": "socks5", "hostname": "localhost", "port": 1080}
