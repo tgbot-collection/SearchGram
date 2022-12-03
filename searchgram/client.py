@@ -76,7 +76,7 @@ def sync_history():
             enable = True
 
     if enable:
-        saved = app.send_message("me", "Starting to sync history...")
+        saved = app.send_message(BOT_ID, "Starting to sync history...")
 
         for uid, enabled in config.items(section):
             if enabled.lower() != "false":
