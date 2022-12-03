@@ -7,7 +7,9 @@
 
 __author__ = "Benny <benny.think@gmail.com>"
 
+import contextlib
 import json
+import subprocess
 
 from pyrogram import Client
 
@@ -19,11 +21,18 @@ def get_client(token=None):
         proxy = json.loads(PROXY)
     else:
         proxy = PROXY
+    app_device = dict(app_version=f"SearchGram/{get_revision()}", device_model="Firefox", proxy=proxy)
     if token:
         return Client("session/bot", APP_ID, APP_HASH, bot_token=token,
-                      proxy=proxy
+                      **app_device
                       )
     else:
         return Client("session/client", APP_ID, APP_HASH,
-                      proxy=proxy
+                      **app_device
                       )
+
+
+def get_revision():
+    with contextlib.suppress(subprocess.SubprocessError):
+        return subprocess.check_output("git -C ../ rev-parse --short HEAD".split()).decode("u8").replace("\n", "")
+    return "0.0.1"
