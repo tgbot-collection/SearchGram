@@ -65,7 +65,7 @@ def safe_edit(msg, new_text):
 
 
 def sync_history():
-    time.sleep(5)
+    time.sleep(30)
     section = "chat"
     config = configparser.ConfigParser(allow_no_value=True)
     config.read('sync.ini')
@@ -76,7 +76,7 @@ def sync_history():
             enable = True
 
     if enable:
-        saved = app.send_message(BOT_ID, "Starting to sync history...")
+        saved = app.send_message("me", "Starting to sync history...")
 
         for uid, enabled in config.items(section):
             if enabled.lower() != "false":

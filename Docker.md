@@ -117,6 +117,8 @@ what
 you want.
 
 Secondly, you'll have to manually edit `sync.ini`
+**Please use username as much as possible. 
+If you want to use user_id, please talk to the person immediately after starting `client.py`. You have 30s to do so.**
 
 ```ini
 [chat]
