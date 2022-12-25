@@ -82,6 +82,6 @@ jobs:
           script: |
             docker save bennythink/searchgram > /root/searchgram-old.tar
             docker pull bennythink/searchgram
-            docker-compose -f ~/SearchGram/docker-compose.yml up -d
+            docker-compose -f /home/SearchGram/docker-compose.yml up -d
             curl "https://api.telegram.org/bot$TOKEN/sendMessage?chat_id=260260121&text=SearchGram%20upgrade%20complete!"
             echo "SearchGram upgrade complete!"
