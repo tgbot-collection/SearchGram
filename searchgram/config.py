@@ -19,3 +19,5 @@ BOT_ID = TOKEN.split(":")[0]
 PROXY = os.getenv("PROXY")
 # example proxy configuration
 # PROXY = {"scheme": "socks5", "hostname": "localhost", "port": 1080}
+
+IPv6 = bool(os.getenv("IPv6", False))

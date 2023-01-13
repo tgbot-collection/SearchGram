@@ -13,7 +13,7 @@ import urllib.request
 
 from pyrogram import Client
 
-from config import APP_HASH, APP_ID, PROXY
+from config import APP_HASH, APP_ID, PROXY, IPv6
 
 
 def get_client(token=None):
@@ -23,11 +23,11 @@ def get_client(token=None):
         proxy = PROXY
     app_device = dict(app_version=f"SearchGram/{get_revision()}", device_model="Firefox", proxy=proxy)
     if token:
-        return Client("session/bot", APP_ID, APP_HASH, bot_token=token,
+        return Client("session/bot", APP_ID, APP_HASH, bot_token=token, ipv6=IPv6,
                       **app_device
                       )
     else:
-        return Client("session/client", APP_ID, APP_HASH,
+        return Client("session/client", APP_ID, APP_HASH, ipv6=IPv6,
                       **app_device
                       )
 
