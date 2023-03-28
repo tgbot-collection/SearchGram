@@ -2,6 +2,8 @@
 
 A telegram Bot that can search for CJK and other languages, as well as message backup utility.
 
+**⚠️️⚠️⚠️Warning: this application is migrating to MeiliSearch. Expect data migration if you want to use new version of it.⚠️⚠️⚠️**
+
 # Introduction
 
 Telegram has bad search experience for CJK languages because those languages are not separated by spacing.
