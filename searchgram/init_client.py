@@ -23,17 +23,13 @@ def get_client(token=None):
         proxy = PROXY
     app_device = dict(app_version=f"SearchGram/{get_revision()}", device_model="Firefox", proxy=proxy)
     if token:
-        return Client("session/bot", APP_ID, APP_HASH, bot_token=token, ipv6=IPv6,
-                      **app_device
-                      )
+        return Client("session/bot", APP_ID, APP_HASH, bot_token=token, ipv6=IPv6, **app_device)
     else:
-        return Client("session/client", APP_ID, APP_HASH, ipv6=IPv6,
-                      **app_device
-                      )
+        return Client("session/client", APP_ID, APP_HASH, ipv6=IPv6, **app_device)
 
 
 def get_revision():
-    url = 'https://api.github.com/repos/tgbot-collection/SearchGram/commits/master'
+    url = "https://api.github.com/repos/tgbot-collection/SearchGram/commits/master"
     with contextlib.suppress(Exception):
-        return json.loads(urllib.request.urlopen(url).read())['sha'][:7]
-    return "0.0.1"
+        return json.loads(urllib.request.urlopen(url).read())["sha"][:7]
+    return "0.0.0"

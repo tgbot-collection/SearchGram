@@ -2,37 +2,33 @@ version: '3.1'
 
 services:
   client:
-    image: bennythink/searchgram:ng
+    image: bennythink/searchgram
     env_file:
       - env/gram.env
     restart: always
     depends_on:
-      - meili
+      - mongo
     volumes:
       - ./sg_data/session:/SearchGram/searchgram/session
     command:
       - client.py
 
   bot:
-    image: bennythink/searchgram:ng
+    image: bennythink/searchgram
     env_file:
       - env/gram.env
     restart: always
     depends_on:
-      - meili
+      - mongo
     volumes:
       - ./sg_data/session:/SearchGram/searchgram/session
     command:
       - bot.py
 
-  meili:
-    image: getmeili/meilisearch:v1.1.0-rc.3
+  mongo:
+    image: mongo:6
     restart: always
     volumes:
-      - ./sg_data/:/meili_data
+      - ./sg_data/mongodb:/data/db
     logging:
       driver: none
-    env_file:
-      - env/gram.env
-    ports:
-      - "127.0.0.1:7700:7700"

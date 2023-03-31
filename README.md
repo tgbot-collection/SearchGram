@@ -2,7 +2,6 @@
 
 A telegram Bot that can search for CJK and other languages, as well as message backup utility.
 
-**⚠️️⚠️⚠️Warning: this application is migrating to MeiliSearch. Expect data migration if you want to use new version of it.⚠️⚠️⚠️**
 
 # Introduction
 
@@ -54,7 +53,7 @@ https://user-images.githubusercontent.com/14024832/164222317-ea6b228c-bda3-4983-
 
 * Download or clone this repository
 * Install Python from here: https://www.python.org/downloads/
-* Install MongoDB from here: https://www.mongodb.com/download/
+* Install MeiliSearch from here: https://github.com/meilisearch/meilisearch
 * Apply for APP_ID and APP_HASH from here: https://my.telegram.org/
 * Talk to https://t.me/BotFather to get your bot token
 * Talk to https://t.me/blog_update_bot to get your user id
@@ -79,7 +78,7 @@ PROXY = {"scheme": "socks5", "hostname": "localhost", "port": 1080}
 
 ## 3. Login to client
 
-Open a terminal(cmd, iTerm, etc), change directory to your code, and then:
+Open a terminal(cmd, iTerm, etc), cd to your code, and then:
 
 ```shell
 python client.py
@@ -100,10 +99,6 @@ python client.py
 python bot.py
 ```
 
-# Roadmap and TODOs
-
-- [x] chat history
-- [ ] jieba
 
 # Sponsor
 

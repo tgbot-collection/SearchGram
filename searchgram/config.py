@@ -9,11 +9,12 @@ __author__ = "Benny <benny.think@gmail.com>"
 
 import os
 
-APP_ID = int(os.getenv("APP_ID", 1234))
-APP_HASH = os.getenv("APP_HASH", "1234da")
-TOKEN = os.getenv("TOKEN", "abchw")  # id:hash
-MONGO_HOST = os.getenv("MONGO_HOST", "mongo")
-OWNER_ID = os.getenv("OWNER_ID", "123456")
+APP_ID = int(os.getenv("APP_ID", 321232123))
+APP_HASH = os.getenv("APP_HASH", "23231321")
+TOKEN = os.getenv("TOKEN", "1234")  # id:hash
+MEILI_HOST = os.getenv("MEILI_HOST", "http://meili:7700")
+MEILI_PASS = os.getenv("MEILI_MASTER_KEY", TOKEN)
+OWNER_ID = os.getenv("OWNER_ID", "260260121")
 BOT_ID = TOKEN.split(":")[0]
 
 PROXY = os.getenv("PROXY")

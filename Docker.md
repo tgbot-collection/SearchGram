@@ -1,9 +1,12 @@
 > This document will help you to go through the entire process of running this utility.
 
+# 1. Prepare environment and download appropiate docker-compose.yml
 
-# 1. Prepare environment and clone this repository
+Install docker and docker-compose on your server.
+* if you want to use legacy version, which is powered by MongoDB, please use docker-compose.legacy.yml
+* if you want to use latest version, which is powered by MeiliSearch, please use docker-compose.yml
 
-Install docker and docker-compose on your server, clone this repository to any directory you want.
+**If you want to use legacy version of this bot, please download**
 
 # 2. (Optional) Prepare Encryption data volume
 
@@ -35,43 +38,43 @@ I/O size (minimum/optimal): 512 bytes / 512 bytes
 
 ```shell
 pvcreate /dev/loop0
-vgcreate vg_mongo_data /dev/loop0
+vgcreate vg_sg_data /dev/loop0
 # use vgdisplay to confirm Volume Group
 vgdisplay
 
 # create logical volume
-lvcreate --extents 100%FREE vg_mongo_data -n lv_mongo_data
+lvcreate --extents 100%FREE vg_sg_data -n lv_sg_data
 
 # You should have device here 
-file /dev/vg_mongo_data/lv_mongo_data
+file /dev/vg_sg_data/lv_sg_data
 ```
 
 ## 2.3 luks
 
 ```shell
 # format lucks and input your password
-cryptsetup luksFormat /dev/vg_mongo_data/lv_mongo_data
+cryptsetup luksFormat /dev/vg_sg_data/lv_sg_data
 # open device
-cryptsetup luksOpen /dev/vg_mongo_data/lv_mongo_data mongo_data
-# you should see /dev/mapper/mongo_data
-file /dev/mapper/mongo_data
-cryptsetup status mongo_data
+cryptsetup luksOpen /dev/vg_sg_data/lv_sg_data sg_data
+# you should see /dev/mapper/sg_data
+file /dev/mapper/sg_data
+cryptsetup status sg_data
 ```
 
 ## 2.4 format and mount
 
 ```shell
-mkfs.ext4 /dev/mapper/mongo_data
-mkdir -p mongo_data
-mount /dev/mapper/mongo_data ./mongo_data
-chmod 777 mongo_data
+mkfs.ext4 /dev/mapper/sg_data
+mkdir -p sg_data
+mount /dev/mapper/sg_data ./sg_data
+chmod 777 sg_data
 ```
 
 ## 2.5 unmount and remove
 
 ```shell
-umount /dev/mapper/mongo_data
-cryptsetup luksClose mongo_data
+umount /dev/mapper/sg_data
+cryptsetup luksClose sg_data
 ````
 
 # 3. Prepare APP_ID, APP_HASH and bot token
@@ -113,8 +116,7 @@ under `searchgram/session/client.session`.
 If you would like to sync all the chat history for any user, group or channel, you can configure sync id.
 
 First thing you need is obtaining chat peer, it could be integer or username. Use https://t.me/blog_update_bot to get
-what
-you want.
+what you want.
 
 Secondly, you'll have to manually edit `sync.ini`
 **Please use username as much as possible. 
