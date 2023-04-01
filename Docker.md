@@ -109,7 +109,6 @@ TOKEN=token
 APP_ID=id
 APP_HASH=hash
 OWNER_ID=your user_id
-BOT_ID=your bot_id
 MEILI_MASTER_KEY=token
 ```
 
