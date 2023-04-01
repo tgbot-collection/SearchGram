@@ -23,6 +23,21 @@ Issues regarding this have been reported years ago but have yet to be resolved.
 * Provides pagination
 * Uses a WebUI for searching
 
+# search syntax
+
+1. global search: send any message to the bot
+2. chat type search: `-t=GROUP keyword`, support types are ["BOT", "CHANNEL", "GROUP", "PRIVATE", "SUPERGROUP"]
+3. chat user search: `-u=user_id|username keyword`
+4. combine of above: `-t=GROUP -u=user_id|username keyword`
+
+# commands
+
+```shell
+/start - Start the bot
+/ping - Check if the bot is alive
+/help - Show help message
+```
+
 # Theory
 
 SearchGram works by:
@@ -41,6 +56,7 @@ you can relax because SearchGram offers a solution to sync your chat history usi
 ![](assets/1.png)
 ![](assets/2.png)
 ![](assets/3.png)
+![](assets/4.png)
 
 # Installation
 
