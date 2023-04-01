@@ -22,10 +22,13 @@ setup_logger()
 class SearchEngine:
     def __init__(self):
         # ["BOT", "CHANNEL", "GROUP", "PRIVATE", "SUPERGROUP"]
-        self.client = meilisearch.Client(MEILI_HOST, MEILI_PASS)
-        self.client.create_index("telegram", {"primaryKey": "ID"})
-        self.client.index("telegram").update_filterable_attributes(["chat.id", "chat.username", "chat.type"])
-        self.client.index("telegram").update_sortable_attributes(["date"])
+        try:
+            self.client = meilisearch.Client(MEILI_HOST, MEILI_PASS)
+            self.client.create_index("telegram", {"primaryKey": "ID"})
+            self.client.index("telegram").update_filterable_attributes(["chat.id", "chat.username", "chat.type"])
+            self.client.index("telegram").update_sortable_attributes(["date"])
+        except:
+            logging.critical("Failed to connect to MeiliSearch")
 
     @staticmethod
     def set_uid(message) -> "dict":

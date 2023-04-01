@@ -30,8 +30,6 @@ services:
     restart: always
     volumes:
       - ./sg_data/:/meili_data
-    logging:
-      driver: none
     env_file:
       - env/gram.env
     ports:

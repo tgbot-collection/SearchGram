@@ -1,5 +1,5 @@
 init:
-	docker run --rm -v $(shell pwd):/root/ -w /root/searchgram --env-file=env/gram.env --entrypoint=/bin/sh -it bennythink/searchgram
+	docker run --rm -v $(shell pwd)/sg_data/session:/SearchGram/searchgram/session --env-file=env/gram.env --entrypoint=/bin/sh -it bennythink/searchgram:ng
 
 up:
 	echo "Starting up..."
@@ -12,34 +12,34 @@ down:
 	docker-compose down
 
 clean:
-	rm -rf mongo_data
+	rm -rf sg_data
 
 open:
-	cryptsetup luksOpen /dev/vg_mongo_data/lv_mongo_data mongo_data
-	mount /dev/mapper/mongo_data ./mongo_data
+	cryptsetup luksOpen /dev/vg_sg_data/lv_sg_data sg_data
+	mount /dev/mapper/sg_data ./sg_data
 
 close:
-	umount /dev/mapper/mongo_data
-	cryptsetup luksClose mongo_data
+	umount /dev/mapper/sg_data
+	cryptsetup luksClose sg_data
 
 encrypt:
 	fallocate -l 20G pv0.img
 	losetup /dev/loop0 pv0.img
 	pvcreate /dev/loop0
-	vgcreate vg_mongo_data /dev/loop0
-	lvcreate --extents 100%FREE vg_mongo_data -n lv_mongo_data
+	vgcreate vg_sg_data /dev/loop0
+	lvcreate --extents 100%FREE vg_sg_data -n lv_sg_data
 
-	cryptsetup luksFormat /dev/vg_mongo_data/lv_mongo_data
-	cryptsetup luksOpen /dev/vg_mongo_data/lv_mongo_data mongo_data
+	cryptsetup luksFormat /dev/vg_sg_data/lv_sg_data
+	cryptsetup luksOpen /dev/vg_sg_data/lv_sg_data sg_data
 
 format:
-	mkfs.ext4 /dev/mapper/mongo_data
-	mkdir -p mongo_data
-	mount /dev/mapper/mongo_data ./mongo_data
-	chmod 777 mongo_data
+	mkfs.ext4 /dev/mapper/sg_data
+	mkdir -p sg_data
+	mount /dev/mapper/sg_data ./sg_data
+	chmod 777 sg_data
 
 upgrade:
 	git pull
-	docker pull bennythink/searchgram
+	docker pull bennythink/searchgram:ng
 	docker-compose up -d
 
