@@ -8,7 +8,6 @@
 __author__ = "Benny <benny.think@gmail.com>"
 
 import configparser
-import json
 import logging
 import random
 import threading
@@ -18,14 +17,14 @@ import fakeredis
 from pyrogram import Client, filters, types
 
 from config import BOT_ID
-from engine import Mongo
+from engine import SearchEngine
 from init_client import get_client
-from utils import apply_log_formatter, set_mention
+from utils import setup_logger
 
-apply_log_formatter()
+setup_logger()
 
 app = get_client()
-tgdb = Mongo()
+tgdb = SearchEngine()
 r = fakeredis.FakeStrictRedis()
 
 
@@ -36,9 +35,7 @@ def message_handler(client: "Client", message: "types.Message"):
         logging.debug("Ignoring message from bot itself")
         return
 
-    set_mention(message)
-    data = json.loads(str(message))
-    tgdb.insert(data)
+    tgdb.upsert(message)
 
 
 @app.on_edited_message()
@@ -47,13 +44,8 @@ def message_edit_handler(client: "Client", message: "types.Message"):
     if str(message.chat.id) == BOT_ID:
         logging.debug("Ignoring message from bot itself")
         return
-    chat_id = message.chat.id
-    msg_id = message.id
-    new_text = message.text
-    edit_date = str(message.edit_date)
-    cond = {'chat.id': chat_id, 'id': msg_id}
-    body = {'text': new_text, 'edit_date': edit_date}
-    tgdb.edit(cond, body)
+
+    tgdb.upsert(message)
 
 
 def safe_edit(msg, new_text):
@@ -68,7 +60,7 @@ def sync_history():
     time.sleep(30)
     section = "chat"
     config = configparser.ConfigParser(allow_no_value=True)
-    config.read('sync.ini')
+    config.read("sync.ini")
 
     enable = False
     for _, i in config.items(section):
@@ -90,11 +82,11 @@ def sync_history():
                 for msg in chat_records:
                     safe_edit(saved, f"[{current}/{total_count}] - {log}")
                     current += 1
-                    tgdb.update(msg)
+                    tgdb.upsert(msg)
                 # single chat sync complete, we'll set sync enable to 'false' to avoid further flooding
-                config.set(section, uid, 'false')
+                config.set(section, uid, "false")
 
-        with open('sync.ini', 'w') as configfile:
+        with open("sync.ini", "w") as configfile:
             config.write(configfile)
 
         log = "Sync history complete"
@@ -102,6 +94,6 @@ def sync_history():
         safe_edit(saved, log)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     threading.Thread(target=sync_history).start()
     app.run()

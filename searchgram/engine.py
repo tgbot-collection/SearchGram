@@ -9,46 +9,39 @@ __author__ = "Benny <benny.think@gmail.com>"
 
 import contextlib
 import json
-import re
+import logging
 
-import pymongo
-import zhconv
+import meilisearch
 
-from config import MONGO_HOST
-from utils import set_mention
+from config import MEILI_HOST, MEILI_PASS
+from utils import setup_logger, sizeof_fmt
 
-
-def sizeof_fmt(num: int, suffix='B'):
-    for unit in ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi']:
-        if abs(num) < 1024.0:
-            return "%3.1f%s%s" % (num, unit, suffix)
-        num /= 1024.0
-    return "%.1f%s%s" % (num, 'Yi', suffix)
+setup_logger()
 
 
-class Mongo:
+class SearchEngine:
     def __init__(self):
-        self.client = pymongo.MongoClient(host=MONGO_HOST, connect=False,
-                                          connectTimeoutMS=5000, serverSelectionTimeoutMS=5000)
-        self.db = self.client["telegram"]
-        self.col = self.db["chat"]
-        self.history = self.db["history"]
+        # ["BOT", "CHANNEL", "GROUP", "PRIVATE", "SUPERGROUP"]
+        self.client = meilisearch.Client(MEILI_HOST, MEILI_PASS)
+        self.client.create_index("telegram", {"primaryKey": "ID"})
+        self.client.index("telegram").update_filterable_attributes(["chat.id", "chat.username", "chat.type"])
+        self.client.index("telegram").update_sortable_attributes(["date"])
 
-    def __del__(self):
-        self.client.close()
+    @staticmethod
+    def set_uid(message) -> "dict":
+        uid = f"{message.chat.id}-{message.id}"
+        setattr(message, "ID", uid)
+        data = json.loads(str(message))
+        return data
 
-    def insert(self, doc: "dict"):
-        resp = self.col.insert_one(doc)
-        return resp
-
-    def edit(self, condition, body):
-        # first alter field name
-        self.col.update_one(condition, {"$rename": {"text": "old_text.{}".format(body["edit_date"])}})
-        # then add new field text
-        self.col.update_one(condition, {"$set": {"text": body["text"]}})
+    def upsert(self, message):
+        data = self.set_uid(message)
+        self.client.index("telegram").add_documents([data])
 
     @staticmethod
     def __clean_user(user: "str"):
+        if user is None:
+            return None
         with contextlib.suppress(Exception):
             return int(user)
         if user.startswith("@"):
@@ -57,72 +50,36 @@ class Mongo:
             return user[13:]
         return user
 
-    def search(self, keyword, user=None):
-        # support for fuzzy search
-        keyword = re.sub(r"\s+", ".*", keyword)
-
-        hans = zhconv.convert(keyword, "zh-hans")
-        hant = zhconv.convert(keyword, "zh-hant")
-        results = []
-        filter_ = {
-            "$or":
-                [
-                    {"text": {'$regex': f'.*{hans}.*', "$options": "i"}},
-                    {"text": {'$regex': f'.*{hant}.*', "$options": "i"}}
-                ]
+    def search(self, keyword, _type=None, user=None, page=1):
+        user = self.__clean_user(user)
+        params = {
+            "hitsPerPage": 10,
+            "page": page,
+            "sort": ["date:desc"],
+            "matchingStrategy": "all",
+            "filter": [],
         }
         if user:
-            user = self.__clean_user(user)
-            filter_["$and"] = [
-                {"$or": [
-                    {"from_user.id": user},
-                    {"from_user.username": {'$regex': f'.*{user}.*', "$options": "i"}},
-                    {"from_user.first_name": {'$regex': f'.*{user}.*', "$options": "i"}},
-
-                    {"chat.id": user},
-                    {"chat.username": {'$regex': f'.*{user}.*', "$options": "i"}},
-                    {"chat.first_name": {'$regex': f'.*{user}.*', "$options": "i"}},
-                ]}
-            ]
-        data = self.col.find(filter_).sort("date", pymongo.DESCENDING)
-        for hit in data:
-            hit.pop("_id")
-            results.append(hit)
-
-        return results
+            params["filter"].extend([f"chat.username = {user} OR chat.id = {user}"])
+        if _type:
+            params["filter"].extend([f"chat.type = ChatType.{_type}"])
+        logging.info("Search params: %s", params)
+        return self.client.index("telegram").search(keyword, params)
 
     def ping(self):
-        count = self.col.count_documents({})
-        size = self.db.command("dbstats")["storageSize"]
-        return f"{count} messages, {sizeof_fmt(size)}"
+        text = "Pong!\n"
+        stats = self.client.get_all_stats()
+        size = stats["databaseSize"]
+        last_update = stats["lastUpdate"]
+        for uid, index in stats["indexes"].items():
+            text += f"Index {uid} has {index['numberOfDocuments']} documents\n"
+        text += f"\nDatabase size: {sizeof_fmt(size)}\nLast update: {last_update}\n"
+        return text
 
-    def insert_history(self, doc):
-        self.history.insert_one(doc)
-
-    def find_history(self, msg_id):
-        return self.history.find_one({"message_id": msg_id})
-
-    def update(self, doc):
-        msg_id = doc.id
-        chat_id = doc.chat.id
-
-        set_mention(doc)
-        doc = json.loads(str(doc))
-
-        self.col.update_one(
-            {
-                "chat.id": chat_id,
-                "$or": [
-                    {"id": {"$eq": msg_id}},
-                    {"message_id": {"$eq": msg_id}}
-                ]
-            },
-            {"$setOnInsert": doc},
-            upsert=True
-        )
+    def clear_db(self):
+        self.client.index("telegram").delete()
 
 
-if __name__ == '__main__':
-    tges = Mongo()
-    for i in tges.search("干扰项"):
-        print(i["text"], i["mention"])
+if __name__ == "__main__":
+    search = SearchEngine()
+    print(search.search("猫"))

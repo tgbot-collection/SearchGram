@@ -141,3 +141,5 @@ es_data/
 *.img
 mongo_data/*
 searchgram/session/*
+/sg_data/*
+/.idea/*

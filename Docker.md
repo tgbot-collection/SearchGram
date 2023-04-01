@@ -1,22 +1,29 @@
-> This document will help you to go through the entire process of running this utility.
+> This document provides a step-by-step guide to help you run this utility.
 
+# 1. Prepare the Environment and Download the Appropriate Docker Compose File
 
-# 1. Prepare environment and clone this repository
+To get started, install Docker and Docker Compose on your server.
 
-Install docker and docker-compose on your server, clone this repository to any directory you want.
+You can choose to use either the legacy version, which is powered by MongoDB, by using the docker-compose.legacy.yml
+file
+or the latest version, which is powered by MeiliSearch, by using the docker-compose.yml file.
 
-# 2. (Optional) Prepare Encryption data volume
+# 2. (Optional) Prepare the Encrypted Data Volume
 
-It's highly recommend to use encrypted data volume. You can use LUKS.
+For added security, it's highly recommended to use an encrypted data volume.
 
-Here there is an example of using loop+LVM+LUKS, you can also use simple make commands:
+You can use LUKS for this purpose.
+
+Here's an example of how to use loop+LVM+LUKS to set it up, but you can also use simple make commands:
 
 ```shell
 make encrypt
 make format
 ```
 
-## 2.1 Create loop device
+## 2.1 Create the loop device
+
+Start by creating a loop file and loop device:
 
 ```shell
 # create loop file and loop device
@@ -31,56 +38,70 @@ I/O size (minimum/optimal): 512 bytes / 512 bytes
 
 ```
 
-## 2.2 create LVM
+## 2.2 Create LVM
+
+Create the physical volume and volume group:
 
 ```shell
 pvcreate /dev/loop0
-vgcreate vg_mongo_data /dev/loop0
+vgcreate vg_sg_data /dev/loop0
 # use vgdisplay to confirm Volume Group
 vgdisplay
 
 # create logical volume
-lvcreate --extents 100%FREE vg_mongo_data -n lv_mongo_data
+lvcreate --extents 100%FREE vg_sg_data -n lv_sg_data
 
 # You should have device here 
-file /dev/vg_mongo_data/lv_mongo_data
+file /dev/vg_sg_data/lv_sg_data
 ```
 
 ## 2.3 luks
 
+Format LUKS and enter your password:
+
 ```shell
 # format lucks and input your password
-cryptsetup luksFormat /dev/vg_mongo_data/lv_mongo_data
+cryptsetup luksFormat /dev/vg_sg_data/lv_sg_data
 # open device
-cryptsetup luksOpen /dev/vg_mongo_data/lv_mongo_data mongo_data
-# you should see /dev/mapper/mongo_data
-file /dev/mapper/mongo_data
-cryptsetup status mongo_data
+cryptsetup luksOpen /dev/vg_sg_data/lv_sg_data sg_data
+# you should see /dev/mapper/sg_data
+file /dev/mapper/sg_data
+cryptsetup status sg_data
 ```
 
-## 2.4 format and mount
+## 2.4 Format and Mount
+
+Format and mount the device:
 
 ```shell
-mkfs.ext4 /dev/mapper/mongo_data
-mkdir -p mongo_data
-mount /dev/mapper/mongo_data ./mongo_data
-chmod 777 mongo_data
+mkfs.ext4 /dev/mapper/sg_data
+mkdir -p sg_data
+mount /dev/mapper/sg_data ./sg_data
+chmod 777 sg_data
 ```
 
-## 2.5 unmount and remove
+## 2.5 Unmount and Remove
+
+Unmount and remove the device:
 
 ```shell
-umount /dev/mapper/mongo_data
-cryptsetup luksClose mongo_data
+umount /dev/mapper/sg_data
+cryptsetup luksClose sg_data
 ````
 
-# 3. Prepare APP_ID, APP_HASH and bot token
+# 3. Obtain APP_ID, APP_HASH, and Bot Token
 
-1. You can get APP_ID and APP_HASH from https://core.telegram.org/
-2. Talk to @BotFather to get your bot token
-3. Talk to @blog_update_bot to get your user id and your bot's id
+To get started with SearchGram, you'll need to
+
+1. obtain your APP_ID and APP_HASH from https://core.telegram.org/,
+2. get your bot token by contacting @BotFather
+3. get your user ID and bot ID by contacting @blog_update_bot.
 
 # 4. Modify env file
+
+The MEILI_MASTER_KEY is a credential used to access the Web UI of MeiliSearch.
+
+To simplify things, you can use your bot token instead.
 
 ```shell
 # vim env/gram.env
@@ -89,6 +110,7 @@ APP_ID=id
 APP_HASH=hash
 OWNER_ID=your user_id
 BOT_ID=your bot_id
+MEILI_MASTER_KEY=token
 ```
 
 # 5. Login to client
@@ -97,7 +119,7 @@ BOT_ID=your bot_id
 make init
 ```
 
-And then you'll be dropped into a container shell.
+After running make init, you will be dropped into a container shell.
 
 ```shell
 python client.py
@@ -110,15 +132,18 @@ under `searchgram/session/client.session`.
 
 # 6. (optional)setup sync id
 
-If you would like to sync all the chat history for any user, group or channel, you can configure sync id.
+To synchronize the chat history for a user, group, or channel, you can configure the sync ID.
 
-First thing you need is obtaining chat peer, it could be integer or username. Use https://t.me/blog_update_bot to get
-what
-you want.
+This allows you to specify which chats you want to sync the history for.
 
-Secondly, you'll have to manually edit `sync.ini`
-**Please use username as much as possible. 
-If you want to use user_id, please talk to the person immediately after starting `client.py`. You have 30s to do so.**
+The first step in configuring the sync ID is to obtain the chat peer, which can be either an integer or a username.
+
+You can obtain the chat peer by using https://t.me/blog_update_bot.
+
+Next, you will need to manually edit the sync.ini file.
+**It is recommended to use usernames whenever possible when configuring the sync ID.
+If you need to use a user ID instead, it is important to talk to the person immediately after starting `client.py`
+because you only have 30 seconds to do so.**
 
 ```ini
 [chat]
@@ -133,6 +158,8 @@ BennyThink # will sync this
 docker-compose up -d
 ```
 
-Now you can talk to your friends and search in your bot.
+Once you have completed the previous steps, you can talk to your friends and search in your bot.
 
-If you configure sync id, you can monitor sync status in Saved Messages.
+You can also use http://localhost:7700 to access the MeiliSearch Web UI.
+
+If you have configured the sync ID, you can monitor the sync status in the Saved Messages.
