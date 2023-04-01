@@ -1,53 +1,53 @@
 # SearchGram
 
-A telegram Bot that can search for CJK and other languages, as well as message backup utility.
-
+SearchGram is a Telegram bot that improves search experience for Chinese, Japanese, and Korean (CJK) languages and
+provides message backup functionality.
 
 # Introduction
 
-Telegram has bad search experience for CJK languages because those languages are not separated by spacing.
+Telegram's search function has poor support for CJK languages because there are no spaces to separate words.
 
-Bug issues were submitted years ago but never fixed.
+Issues regarding this have been reported years ago but have yet to be resolved.
 
 * https://github.com/tdlib/td/issues/1004
 * https://bugs.telegram.org/c/724
 
-I'm not planning to be sitting ducks, so I create a bot that can search for CJK languages.
-
 # Feature
 
-* support text message
-* support caption inside photo and document
-* support chat username hints
-* support import user supplied chat history
-* support seamless sync specified chat history in background
-* search for one specific user: `/user <username>|<id>|<firstname> keyword`
+* Supports text message search
+* Provides typo-tolerant and fuzzy search for CJK languages
+* Supports filters for GROUP, CHANNEL, PRIVATE, SUPERGROUP, and BOT
+* Supports username/ID filtering
+* Supports caption search for photos and documents
+* Supports seamless chat history sync in the background
+* Provides pagination
+* Uses a WebUI for searching
 
 # Theory
 
-1. Telegram allows multiple sessions, maximum is 10 clients.
-2. We create a hidden session
-3. We use this session to store all your incoming and outgoing text messages to MongoDB
-4. We create another bot to search MongoDB
-5. We return the whole sentence, so you could use Telegram's built-in buggy search feature.
+SearchGram works by:
 
-What about history chats before running this bot?
+1. Allowing multiple sessions, with a maximum of 10 clients.
+2. Creating a hidden session to store all incoming and outgoing text messages to MeiliSearch.
+3. Creating another bot to query MeiliSearch.
+4. Returning the whole sentence to use Telegram's built-in search feature, which is known to be buggy.
 
-Don't worry, we can either import your history chats, or use config file to sync your history chats.
+If you're concerned about chat history prior to running the bot,
+
+you can relax because SearchGram offers a solution to sync your chat history using a configuration file.
 
 # Screenshots
 
-![](assets/1.jpeg)
-
+![](assets/1.png)
 ![](assets/2.png)
-
-https://user-images.githubusercontent.com/14024832/164222317-ea6b228c-bda3-4983-afd7-7bc8f6af5409.mp4
+![](assets/3.png)
 
 # Installation
 
-**Because chat history is very important, and it should be kept privately, so I don't offer any public bots.**
+**Note: Because chat history should be kept private, we do not offer any public bots.**
+**To learn how to use SearchGram in Docker, please refer to the [Docker.md](Docker.md)**
 
-**For how to use it in docker, please refer to [Docker.md](Docker.md)**
+Please follow the steps below to install SearchGram:
 
 ## 1. Preparation
 
@@ -55,8 +55,8 @@ https://user-images.githubusercontent.com/14024832/164222317-ea6b228c-bda3-4983-
 * Install Python from here: https://www.python.org/downloads/
 * Install MeiliSearch from here: https://github.com/meilisearch/meilisearch
 * Apply for APP_ID and APP_HASH from here: https://my.telegram.org/
-* Talk to https://t.me/BotFather to get your bot token
-* Talk to https://t.me/blog_update_bot to get your user id
+* Obtain your bot token by contacting https://t.me/BotFather.
+* Obtain your user ID by contacting https://t.me/blog_update_bot.
 
 ## 2. Modify environment file
 
@@ -66,11 +66,11 @@ Use your favorite editor to modify `config.py`, example:
 APP_ID = 176552
 APP_HASH = "667276jkajhw"
 TOKEN = "123456:8hjhad"
-MONGO_HOST = "localhost"
+MEILI_HOST = "localhost"
 OWNER_ID = "2311231"
 ```
 
-If your network is limited(like in China), you need to setup proxy:
+If you have limited network access, such as in China, you will need to set up a proxy.
 
 ```python
 PROXY = {"scheme": "socks5", "hostname": "localhost", "port": 1080}
@@ -78,13 +78,13 @@ PROXY = {"scheme": "socks5", "hostname": "localhost", "port": 1080}
 
 ## 3. Login to client
 
-Open a terminal(cmd, iTerm, etc), cd to your code, and then:
+Open a terminal (such as cmd or iTerm), navigate to the directory where you have saved the code, and then:
 
 ```shell
 python client.py
 ```
 
-Input your phone number and login to the client. Ctrl + C to exit
+Enter your phone number and log in to the client. You can exit by pressing `Ctrl + C`.
 
 ## 4. (optional)Setup sync id
 
@@ -92,13 +92,12 @@ See [here](Docker.md#6-optionalsetup-sync-id)
 
 ## 5. Run!
 
-Open two terminals, and respectively:
+Open two terminals and run the following commands in each terminal:
 
 ```shell
 python client.py
 python bot.py
 ```
-
 
 # Sponsor
 
@@ -108,8 +107,9 @@ python bot.py
 
 ## Stripe
 
-You can choose to donate via Stripe. Please click the button below to donate via Stripe.
-Choose the currency and payment method that suits you.
+If you would like to donate to the project using Stripe, please click on the button below.
+
+You can choose the currency and payment method that best suits you.
 
 | USD(Card, Apple Pay and Google Pay)              | SEK(Card, Apple Pay and Google Pay)              | CNY(Card, Apple Pay, Google Pay and Alipay)      |
 |--------------------------------------------------|--------------------------------------------------|--------------------------------------------------|
@@ -118,4 +118,4 @@ Choose the currency and payment method that suits you.
 
 # License
 
-This project is LICENSED under the GNU GENERAL PUBLIC LICENSE Version 3.
+This project is licensed under the GNU GENERAL PUBLIC LICENSE Version 3.
