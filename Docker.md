@@ -131,7 +131,7 @@ under `searchgram/session/client.session`.
 
 # 6. (optional)setup sync id
 
-To synchronize the chat history for a user, group, or channel, you can configure the sync ID.
+To synchronize the chat history/chat record for a user, group, or channel, you can configure the sync ID.
 
 This allows you to specify which chats you want to sync the history for.
 
@@ -145,10 +145,14 @@ If you need to use a user ID instead, it is important to talk to the person imme
 because you only have 30 seconds to do so.**
 
 ```ini
+# chat to sync with, use id or username
 [chat]
-123456 = true # will sync this chat
-789 = false # won't sync this
-BennyThink # will sync this
+123456
+BennyThink
+# chat to ignore, use id or username
+[ignore]
+123456
+BennyThink
 ```
 
 # 6. Up and running

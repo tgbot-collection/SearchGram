@@ -58,33 +58,25 @@ def safe_edit(msg, new_text):
 
 def sync_history():
     time.sleep(30)
-    section = "chat"
     config = configparser.ConfigParser(allow_no_value=True)
     config.read("sync.ini")
 
-    enable = False
-    for _, i in config.items(section):
-        if i.lower() != "false":
-            enable = True
-
-    if enable:
+    if config.items("chat"):
         saved = app.send_message("me", "Starting to sync history...")
 
-        for uid, enabled in config.items(section):
-            if enabled.lower() != "false":
-                total_count = app.get_chat_history_count(uid)
-                log = f"Syncing history for {uid}"
-                logging.info(log)
-                safe_edit(saved, log)
-                time.sleep(random.random())  # avoid flood
-                chat_records = app.get_chat_history(uid)
-                current = 0
-                for msg in chat_records:
-                    safe_edit(saved, f"[{current}/{total_count}] - {log}")
-                    current += 1
-                    tgdb.upsert(msg)
-                # single chat sync complete, we'll set sync enable to 'false' to avoid further flooding
-                config.set(section, uid, "false")
+        for uid in config.options("chat"):
+            total_count = app.get_chat_history_count(uid)
+            log = f"Syncing history for {uid}"
+            logging.info(log)
+            safe_edit(saved, log)
+            time.sleep(random.random())  # avoid flood
+            chat_records = app.get_chat_history(uid)
+            current = 0
+            for msg in chat_records:
+                safe_edit(saved, f"[{current}/{total_count}] - {log}")
+                current += 1
+                tgdb.upsert(msg)
+            config.remove_option("chat", uid)
 
         with open("sync.ini", "w") as configfile:
             config.write(configfile)

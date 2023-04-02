@@ -7,6 +7,7 @@
 
 __author__ = "Benny <benny.think@gmail.com>"
 
+import configparser
 import contextlib
 import json
 import logging
@@ -17,6 +18,7 @@ from config import MEILI_HOST, MEILI_PASS
 from utils import setup_logger, sizeof_fmt
 
 setup_logger()
+config = configparser.ConfigParser(allow_no_value=True)
 
 
 class SearchEngine:
@@ -37,7 +39,18 @@ class SearchEngine:
         data = json.loads(str(message))
         return data
 
+    @staticmethod
+    def check_ignore(message):
+        config.read("sync.ini")
+        ignore_list = config.options("ignore")
+        uid = str(message.chat.id)
+        username = getattr(message.chat, "username", None)
+        if username in ignore_list or uid in ignore_list:
+            return True
+
     def upsert(self, message):
+        if self.check_ignore(message):
+            return
         data = self.set_uid(message)
         self.client.index("telegram").add_documents([data])
 
