@@ -144,6 +144,8 @@ Next, you will need to manually edit the `sync.ini` and `chatlist.ini` file.
 If you need to use a user ID instead, it is important to talk to the person immediately after starting `client.py`
 because you only have 30 seconds to do so.**
 
+For `chatlist.ini`, it's also available to use `` `PRIVATE` ``, `` `BOT` ``, `` `GROUP` ``, `` `SUPERGROUP` ``, `` `CHANNEL` `` to match the type of the chat.
+
 ```ini
 # sync.ini
 # chat to sync with, use id or username
@@ -157,6 +159,9 @@ BennyThink
 # chat in whitelist, use id or username
 # leave empty to allow all chat
 [whitelist]
+`PRIVATE`
+`BOT`
+`CHANNEL`
 123456
 BennyThink
 

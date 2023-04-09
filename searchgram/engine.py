@@ -19,6 +19,7 @@ from utils import setup_logger, sizeof_fmt
 
 setup_logger()
 config = configparser.ConfigParser(allow_no_value=True)
+config.optionxform = lambda option: option
 
 
 class SearchEngine:
@@ -45,10 +46,11 @@ class SearchEngine:
         black_list = config.options("blacklist")
         white_list = config.options("whitelist")
         uid = str(message.chat.id)
+        chat_type = str(message.chat.type)[9:]
         username = getattr(message.chat, "username", None)
-        if white_list and uid not in white_list and username not in white_list:
+        if white_list and not (uid in white_list or username in white_list or f"`{chat_type}`" in white_list):
             return True
-        if username in black_list or uid in black_list:
+        if username in black_list or uid in black_list or f"`{chat_type}`" in black_list:
             return True
 
     def upsert(self, message):

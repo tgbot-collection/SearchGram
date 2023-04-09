@@ -59,6 +59,7 @@ def safe_edit(msg, new_text):
 def sync_history():
     time.sleep(30)
     config = configparser.ConfigParser(allow_no_value=True)
+    config.optionxform = lambda option: option
     config.read("sync.ini")
 
     if config.items("chat"):
