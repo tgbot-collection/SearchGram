@@ -41,11 +41,14 @@ class SearchEngine:
 
     @staticmethod
     def check_ignore(message):
-        config.read("sync.ini")
-        ignore_list = config.options("ignore")
+        config.read("chatlist.ini")
+        black_list = config.options("blacklist")
+        white_list = config.options("whitelist")
         uid = str(message.chat.id)
         username = getattr(message.chat, "username", None)
-        if username in ignore_list or uid in ignore_list:
+        if white_list and uid not in white_list and username not in white_list:
+            return True
+        if username in black_list or uid in black_list:
             return True
 
     def upsert(self, message):
