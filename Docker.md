@@ -51,7 +51,7 @@ vgdisplay
 # create logical volume
 lvcreate --extents 100%FREE vg_sg_data -n lv_sg_data
 
-# You should have device here 
+# You should have device here
 file /dev/vg_sg_data/lv_sg_data
 ```
 
@@ -139,18 +139,31 @@ The first step in configuring the sync ID is to obtain the chat peer, which can 
 
 You can obtain the chat peer by using https://t.me/blog_update_bot.
 
-Next, you will need to manually edit the sync.ini file.
+Next, you will need to manually edit the `sync.ini` file.
 **It is recommended to use usernames whenever possible when configuring the sync ID.
 If you need to use a user ID instead, it is important to talk to the person immediately after starting `client.py`
 because you only have 30 seconds to do so.**
 
+For `[whitelist]` and `[blacklist]`, it's also available to use `` `PRIVATE` ``, `` `BOT` ``, `` `GROUP` ``, `` `SUPERGROUP` ``, `` `CHANNEL` `` to match the type of the chat.
+
 ```ini
 # chat to sync with, use id or username
-[chat]
+[sync]
 123456
 BennyThink
-# chat to ignore, use id or username
-[ignore]
+
+# chat in whitelist, use id or username
+# leave empty to allow all chat
+[whitelist]
+`PRIVATE`
+`BOT`
+`CHANNEL`
+123456
+BennyThink
+
+# chat in blacklist, use id or username
+# chat in this list would be ignored even it is in whitelist
+[blacklist]
 123456
 BennyThink
 ```

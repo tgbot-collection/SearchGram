@@ -59,12 +59,13 @@ def safe_edit(msg, new_text):
 def sync_history():
     time.sleep(30)
     config = configparser.ConfigParser(allow_no_value=True)
+    config.optionxform = lambda option: option
     config.read("sync.ini")
 
-    if config.items("chat"):
+    if config.items("sync"):
         saved = app.send_message("me", "Starting to sync history...")
 
-        for uid in config.options("chat"):
+        for uid in config.options("sync"):
             total_count = app.get_chat_history_count(uid)
             log = f"Syncing history for {uid}"
             logging.info(log)
@@ -76,7 +77,7 @@ def sync_history():
                 safe_edit(saved, f"[{current}/{total_count}] - {log}")
                 current += 1
                 tgdb.upsert(msg)
-            config.remove_option("chat", uid)
+            config.remove_option("sync", uid)
 
         with open("sync.ini", "w") as configfile:
             config.write(configfile)
