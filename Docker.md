@@ -139,23 +139,19 @@ The first step in configuring the sync ID is to obtain the chat peer, which can 
 
 You can obtain the chat peer by using https://t.me/blog_update_bot.
 
-Next, you will need to manually edit the `sync.ini` and `chatlist.ini` file.
+Next, you will need to manually edit the `sync.ini` file.
 **It is recommended to use usernames whenever possible when configuring the sync ID.
 If you need to use a user ID instead, it is important to talk to the person immediately after starting `client.py`
 because you only have 30 seconds to do so.**
 
-For `chatlist.ini`, it's also available to use `` `PRIVATE` ``, `` `BOT` ``, `` `GROUP` ``, `` `SUPERGROUP` ``, `` `CHANNEL` `` to match the type of the chat.
+For `[whitelist]` and `[blacklist]`, it's also available to use `` `PRIVATE` ``, `` `BOT` ``, `` `GROUP` ``, `` `SUPERGROUP` ``, `` `CHANNEL` `` to match the type of the chat.
 
 ```ini
-# sync.ini
 # chat to sync with, use id or username
-[chat]
+[sync]
 123456
 BennyThink
-```
 
-```ini
-# chatlist.ini
 # chat in whitelist, use id or username
 # leave empty to allow all chat
 [whitelist]

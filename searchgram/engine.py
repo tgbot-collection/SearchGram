@@ -42,7 +42,7 @@ class SearchEngine:
 
     @staticmethod
     def check_ignore(message):
-        config.read("chatlist.ini")
+        config.read("sync.ini")
         black_list = config.options("blacklist")
         white_list = config.options("whitelist")
         uid = str(message.chat.id)
