@@ -19,6 +19,7 @@ from utils import setup_logger, sizeof_fmt
 
 setup_logger()
 config = configparser.ConfigParser(allow_no_value=True)
+config.optionxform = lambda option: option
 
 
 class SearchEngine:
