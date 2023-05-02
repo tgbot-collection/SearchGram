@@ -72,7 +72,9 @@ class SearchEngine:
             return user[13:]
         return user
 
-    def search(self, keyword, _type=None, user=None, page=1):
+    def search(self, keyword, _type=None, user=None, page=1, mode=None):
+        if mode:
+            keyword = f'"{keyword}"'
         user = self.__clean_user(user)
         params = {
             "hitsPerPage": 10,

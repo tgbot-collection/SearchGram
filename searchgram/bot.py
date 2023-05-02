@@ -26,6 +26,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("keyword", help="the keyword to be searched")
 parser.add_argument("-t", "--type", help="the type of message", default=None)
 parser.add_argument("-u", "--user", help="the user who sent the message", default=None)
+parser.add_argument("-m", "--mode", help="match mode, e: exact match, other value is fuzzy search", default=None)
 
 
 def private_use(func):
@@ -53,7 +54,8 @@ SearchGram Search syntax Help:
 1. **global search**: send any message to me
 2. **chat type search**: `-t=GROUP keyword`, support types are ["BOT", "CHANNEL", "GROUP", "PRIVATE", "SUPERGROUP"]
 3. **chat user search**: `-u=user_id|username keyword`
-4. combine of above: `-t=GROUP -u=user_id|username keyword`
+4. **exact match**: `-m=e keyword` or directly `"keyword"`
+5. combine of above: `-t=GROUP -u=user_id|username keyword`
     """
     message.reply_text(help_text, quote=True)
 
@@ -126,7 +128,8 @@ def parse_and_search(text, page=1):
     _type = args.type
     user = args.user
     keyword = args.keyword
-    results = tgdb.search(keyword, _type, user, page)
+    mode = args.mode
+    results = tgdb.search(keyword, _type, user, page, mode)
     text = parse_search_results(results)
     if not text:
         return "No results found", None

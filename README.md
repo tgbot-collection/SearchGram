@@ -28,7 +28,8 @@ Issues regarding this have been reported years ago but have yet to be resolved.
 1. global search: send any message to the bot
 2. chat type search: `-t=GROUP keyword`, support types are ["BOT", "CHANNEL", "GROUP", "PRIVATE", "SUPERGROUP"]
 3. chat user search: `-u=user_id|username keyword`
-4. combine of above: `-t=GROUP -u=user_id|username keyword`
+4. exact match: `-m=e keyword` or directly `"keyword"`
+5. combine of above: `-t=GROUP -u=user_id|username keyword`
 
 # commands
 
