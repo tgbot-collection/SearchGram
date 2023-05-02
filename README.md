@@ -37,6 +37,11 @@ Issues regarding this have been reported years ago but have yet to be resolved.
 /start - Start the bot
 /ping - Check if the bot is alive
 /help - Show help message
+/bot - Search messages from bots
+/channel - Search messages from channels
+/group - Search messages from groups
+/private - Search messages from private chats
+/supergroup - Search messages from supergroups
 ```
 
 # Theory

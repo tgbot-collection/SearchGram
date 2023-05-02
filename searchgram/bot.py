@@ -21,7 +21,7 @@ from utils import setup_logger
 
 setup_logger()
 app = get_client(TOKEN)
-
+chat_types = [i for i in dir(enums.ChatType) if not i.startswith("_")]
 tgdb = SearchEngine()
 parser = argparse.ArgumentParser()
 parser.add_argument("keyword", help="the keyword to be searched")
@@ -50,10 +50,10 @@ def search_handler(client: "Client", message: "types.Message"):
 @app.on_message(filters.command(["help"]))
 def help_handler(client: "Client", message: "types.Message"):
     client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
-    help_text = """
+    help_text = f"""
 SearchGram Search syntax Help:
 1. **global search**: send any message to me
-2. **chat type search**: `-t=GROUP keyword`, support types are ["BOT", "CHANNEL", "GROUP", "PRIVATE", "SUPERGROUP"]
+2. **chat type search**: `-t=GROUP keyword`, support types are {chat_types}
 3. **chat user search**: `-u=user_id|username keyword`
 4. **exact match**: `-m=e keyword` or directly `"keyword"`
 5. combine of above: `-t=GROUP -u=user_id|username keyword`
@@ -143,6 +143,18 @@ def parse_and_search(text, page=1):
     page = results["page"]
     markup = generate_navigation(page, total_pages)
     return f"Total Hits: {total_hits}\n{text}", markup
+
+
+@app.on_message(filters.command(chat_types) & filters.text & filters.incoming)
+@private_use
+def type_search_handler(client: "Client", message: "types.Message"):
+    parts = message.text.split(maxsplit=1)
+    cmd = parts[0][1:].upper()
+    keyword = parts[1]
+    refined_text = f"-t={cmd} {keyword}"
+    client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
+    text, markup = parse_and_search(refined_text)
+    message.reply_text(text, quote=True, parse_mode=enums.ParseMode.MARKDOWN, reply_markup=markup)
 
 
 @app.on_message(filters.text & filters.incoming)
