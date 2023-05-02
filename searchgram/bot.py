@@ -9,6 +9,7 @@ __author__ = "Benny <benny.think@gmail.com>"
 
 import argparse
 import logging
+import time
 
 from pyrogram import Client, enums, filters, types
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -84,6 +85,9 @@ def get_name(chat: dict):
 def parse_search_results(data: "dict"):
     result = ""
     hits = data["hits"]
+    # date field is string, sort using it will be wrong.
+    hits.sort(key=lambda x: time.mktime(time.strptime(x["date"], "%Y-%m-%d %H:%M:%S")), reverse=True)
+
     for hit in hits:
         text = hit.get("text") or hit.get("caption")
         if not text:
