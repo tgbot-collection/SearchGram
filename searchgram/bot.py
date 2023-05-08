@@ -97,11 +97,14 @@ def parse_search_results(data: "dict"):
         from_username = get_name(hit.get("from_user") or hit["sender_chat"])
         date = hit["date"]
         outgoing = hit["outgoing"]
+        username = hit["chat"].get("username")
+        # https://corefork.telegram.org/api/links
+        deep_link = f"tg://resolve?domain={username}" if username else "tg://"
 
         if outgoing:
-            result += f"{from_username} -> {chat_username} on {date}: \n`{text}`\n"
+            result += f"{from_username}-> [{chat_username}]({deep_link}) on {date}: \n`{text}`\n\n"
         else:
-            result += f"{chat_username} -> me on {date}: \n`{text}`\n"
+            result += f"[{chat_username}]({deep_link}) -> me on {date}: \n`{text}`\n"
     return result
 
 
