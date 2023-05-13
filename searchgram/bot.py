@@ -52,11 +52,13 @@ def help_handler(client: "Client", message: "types.Message"):
     client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
     help_text = f"""
 SearchGram Search syntax Help:
-1. **global search**: send any message to me
-2. **chat type search**: `-t=GROUP keyword`, support types are {chat_types}
-3. **chat user search**: `-u=user_id|username keyword`
-4. **exact match**: `-m=e keyword` or directly `"keyword"`
-5. combine of above: `-t=GROUP -u=user_id|username keyword`
+1. **global search**: send any message to the bot \n
+2. **chat type search**: `-t=GROUP keyword`, support types are {chat_types}\n
+3. **chat user search**: `-u=user_id|username keyword`\n
+4. **exact match**: `-m=e keyword` or directly add double-quotes `"keyword"`\n
+5. combine of above: `-t=GROUP -u=user_id|username keyword`\n
+6. `/private [username] keyword`: search in private chat with username, if username is omitted, search in all private chats. 
+This also applies to all above search types.\n
     """
     message.reply_text(help_text, quote=True)
 
@@ -149,10 +151,19 @@ def parse_and_search(text, page=1):
 @app.on_message(filters.command(chat_types) & filters.text & filters.incoming)
 @private_use
 def type_search_handler(client: "Client", message: "types.Message"):
-    parts = message.text.split(maxsplit=1)
-    cmd = parts[0][1:].upper()
-    keyword = parts[1]
-    refined_text = f"-t={cmd} {keyword}"
+    parts = message.text.split(maxsplit=2)
+    chat_type = parts[0][1:].upper()
+    if len(parts) == 1:
+        message.reply_text(f"/{chat_type} [username] keyword", quote=True, parse_mode=enums.ParseMode.MARKDOWN)
+        return
+    if len(parts) > 2:
+        user_filter = f"-u={parts[1]}"
+        keyword = parts[2]
+    else:
+        user_filter = ""
+        keyword = parts[1]
+
+    refined_text = f"-t={chat_type} {user_filter} {keyword}"
     client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
     text, markup = parse_and_search(refined_text)
     message.reply_text(text, quote=True, parse_mode=enums.ParseMode.MARKDOWN, reply_markup=markup)

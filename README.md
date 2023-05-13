@@ -30,13 +30,15 @@ Issues regarding this have been reported years ago but have yet to be resolved.
 3. chat user search: `-u=user_id|username keyword`
 4. exact match: `-m=e keyword` or directly `"keyword"`
 5. combine of above: `-t=GROUP -u=user_id|username keyword`
+6. `/private [username] keyword`: search in private chat with username, if username is omitted, search in all private
+   chats. This also applies to all above search types.\n
 
 # commands
 
 ```shell
 /start - Start the bot
 /ping - Check if the bot is alive
-/help - Show help message
+/help - Show help message and search syntax
 /bot - Search messages from bots
 /channel - Search messages from channels
 /group - Search messages from groups
