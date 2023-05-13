@@ -29,14 +29,17 @@ class SearchEngine:
             self.client = meilisearch.Client(MEILI_HOST, MEILI_PASS)
             self.client.create_index("telegram", {"primaryKey": "ID"})
             self.client.index("telegram").update_filterable_attributes(["chat.id", "chat.username", "chat.type"])
-            self.client.index("telegram").update_sortable_attributes(["date"])
+            self.client.index("telegram").update_sortable_attributes(["timestamp"])
         except:
             logging.critical("Failed to connect to MeiliSearch")
 
     @staticmethod
     def set_uid(message) -> "dict":
         uid = f"{message.chat.id}-{message.id}"
+        timestamp = int(message.date.timestamp())
         setattr(message, "ID", uid)
+        setattr(message, "timestamp", timestamp)
+
         data = json.loads(str(message))
         return data
 
@@ -79,7 +82,7 @@ class SearchEngine:
         params = {
             "hitsPerPage": 10,
             "page": page,
-            "sort": ["date:desc"],
+            "sort": ["timestamp:desc"],
             "matchingStrategy": "all",
             "filter": [],
         }

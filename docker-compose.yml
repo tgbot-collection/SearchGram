@@ -26,7 +26,7 @@ services:
       - bot.py
 
   meili:
-    image: getmeili/meilisearch:v1.1.0-rc.3
+    image: getmeili/meilisearch:v1.1.1
     restart: always
     volumes:
       - ./sg_data/:/meili_data

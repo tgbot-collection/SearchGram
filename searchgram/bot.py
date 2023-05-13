@@ -85,8 +85,6 @@ def get_name(chat: dict):
 def parse_search_results(data: "dict"):
     result = ""
     hits = data["hits"]
-    # date field is string, sort using it will be wrong.
-    hits.sort(key=lambda x: time.mktime(time.strptime(x["date"], "%Y-%m-%d %H:%M:%S")), reverse=True)
 
     for hit in hits:
         text = hit.get("text") or hit.get("caption")
@@ -104,7 +102,7 @@ def parse_search_results(data: "dict"):
         if outgoing:
             result += f"{from_username}-> [{chat_username}]({deep_link}) on {date}: \n`{text}`\n\n"
         else:
-            result += f"[{chat_username}]({deep_link}) -> me on {date}: \n`{text}`\n"
+            result += f"[{chat_username}]({deep_link}) -> me on {date}: \n`{text}`\n\n"
     return result
 
 

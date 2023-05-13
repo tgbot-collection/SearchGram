@@ -121,6 +121,10 @@ python client.py
 python bot.py
 ```
 
+## 6. (Optional) Migration
+
+* add timestamp to all your data for better sorting `python add_timestamp.py`
+
 # Sponsor
 
 * [Buy me a coffee](https://www.buymeacoffee.com/bennythink)
