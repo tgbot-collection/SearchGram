@@ -32,7 +32,7 @@ with tqdm(total=total_documents) as pbar:
         for res in documents:
             date_string = res.date
             timestamp = convert_to_timestamp(date_string)
-            uid = s.client.index("telegram").update_documents({"ID": (res.ID), "timestamp": timestamp})
+            uid = s.client.index("telegram").update_documents({"ID": res.ID, "timestamp": timestamp})
             pbar.update(1)
 
 logging.info("Done")

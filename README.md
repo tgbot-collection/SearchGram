@@ -66,6 +66,18 @@ you can relax because SearchGram offers a solution to sync your chat history usi
 ![](assets/3.png)
 ![](assets/4.png)
 
+# System Requirements
+
+Any system that can run Python 3.8+ and MeiliSearch should be able to run SearchGram.
+
+Better to have bigger ram so MeiliSearch can run faster.
+
+If you have limited RAM, you can set environment variables `MEILI_MAX_INDEXING_MEMORY=800M` to limit the RAM use in
+MeiliSearch.
+
+For more information, please
+see [Max indexing memory](https://www.meilisearch.com/docs/learn/configuration/instance_options#max-indexing-memory)
+
 # Installation
 
 **Note: Because chat history should be kept private, we do not offer any public bots.**
