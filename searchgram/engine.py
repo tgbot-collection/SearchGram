@@ -29,6 +29,9 @@ class SearchEngine:
             self.client = meilisearch.Client(MEILI_HOST, MEILI_PASS)
             self.client.create_index("telegram", {"primaryKey": "ID"})
             self.client.index("telegram").update_filterable_attributes(["chat.id", "chat.username", "chat.type"])
+            self.client.index("telegram").update_ranking_rules(
+                ["timestamp:desc", "words", "typo", "proximity", "attribute", "sort", "exactness"]
+            )
             self.client.index("telegram").update_sortable_attributes(["timestamp"])
         except:
             logging.critical("Failed to connect to MeiliSearch")
@@ -61,7 +64,7 @@ class SearchEngine:
         if self.check_ignore(message):
             return
         data = self.set_uid(message)
-        self.client.index("telegram").add_documents([data])
+        self.client.index("telegram").add_documents([data], primary_key="ID")
 
     @staticmethod
     def __clean_user(user: "str"):
