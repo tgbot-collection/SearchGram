@@ -190,8 +190,23 @@ def send_method_callback(client: "Client", callback_query: types.CallbackQuery):
         raise ValueError("Invalid direction")
 
     # find original user query
+    # /private hello
+    # -t=private -u=123 hello
+    # -t=private hello
+    # hello
     user_query = message.reply_to_message.text
-    new_text, new_markup = parse_and_search(user_query, new_page)
+
+    parts = user_query.split(maxsplit=2)
+    if user_query.startswith("/"):
+        user_filter = f"-u={parts[1]}" if len(parts) > 2 else ""
+        keyword = parts[2] if len(parts) > 2 else parts[1]
+        refined_text = f"-t={parts[0][1:].upper()} {user_filter} {keyword}"
+    elif len(parts) == 1:
+        refined_text = parts[0]
+    else:
+        refined_text = user_query
+    client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
+    new_text, new_markup = parse_and_search(refined_text, new_page)
     message.edit_text(new_text, reply_markup=new_markup)
 
 
