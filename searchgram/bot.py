@@ -14,14 +14,15 @@ from pyrogram import Client, enums, filters, types
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 from config import OWNER_ID, TOKEN
-from meili import SearchEngine
+from searchgram import SearchEngine
 from init_client import get_client
 from utils import setup_logger
+
+tgdb = SearchEngine()
 
 setup_logger()
 app = get_client(TOKEN)
 chat_types = [i for i in dir(enums.ChatType) if not i.startswith("_")]
-tgdb = SearchEngine()
 parser = argparse.ArgumentParser()
 parser.add_argument("keyword", help="the keyword to be searched")
 parser.add_argument("-t", "--type", help="the type of message", default=None)

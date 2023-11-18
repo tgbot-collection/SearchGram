@@ -17,7 +17,7 @@ import fakeredis
 from pyrogram import Client, filters, types
 
 from config import BOT_ID
-from meili import SearchEngine
+from searchgram import SearchEngine
 from init_client import get_client
 from utils import setup_logger
 

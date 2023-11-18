@@ -7,22 +7,16 @@
 
 __author__ = "Benny <benny.think@gmail.com>"
 
-import configparser
-import contextlib
-import json
 import logging
+from engine import BasicSearchEngine
 
 import meilisearch
 
-from utils import setup_logger, sizeof_fmt
+from utils import sizeof_fmt
 from config import MEILI_HOST, MEILI_PASS
 
-setup_logger()
-config = configparser.ConfigParser(allow_no_value=True)
-config.optionxform = lambda option: option
 
-
-class SearchEngine:
+class SearchEngine(BasicSearchEngine):
     def __init__(self):
         # ["BOT", "CHANNEL", "GROUP", "PRIVATE", "SUPERGROUP"]
         try:
@@ -36,47 +30,11 @@ class SearchEngine:
         except:
             logging.critical("Failed to connect to MeiliSearch")
 
-    @staticmethod
-    def set_uid(message) -> "dict":
-        uid = f"{message.chat.id}-{message.id}"
-        timestamp = int(message.date.timestamp())
-        setattr(message, "ID", uid)
-        setattr(message, "timestamp", timestamp)
-
-        data = json.loads(str(message))
-        return data
-
-    @staticmethod
-    def check_ignore(message):
-        config.read("sync.ini")
-        blacklist = config.options("blacklist")
-        whitelist = config.options("whitelist")
-        uid = str(message.chat.id)
-        chat_type = message.chat.type.name  # upper case
-        username = getattr(message.chat, "username", None)
-        if whitelist and not (uid in whitelist or username in whitelist or f"`{chat_type}`" in whitelist):
-            return True
-
-        if username in blacklist or uid in blacklist or f"`{chat_type}`" in blacklist:
-            return True
-
     def upsert(self, message):
         if self.check_ignore(message):
             return
         data = self.set_uid(message)
         self.client.index("telegram").add_documents([data], primary_key="ID")
-
-    @staticmethod
-    def __clean_user(user: "str"):
-        if user is None:
-            return None
-        with contextlib.suppress(Exception):
-            return int(user)
-        if user.startswith("@"):
-            return user[1:]
-        if user.startswith("https://t.me/"):
-            return user[13:]
-        return user
 
     def search(self, keyword, _type=None, user=None, page=1, mode=None):
         if mode:
