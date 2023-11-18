@@ -6,9 +6,7 @@
 
 __author__ = "Benny <benny.think@gmail.com>"
 
-import contextlib
-import json
-import re
+import math
 
 import pymongo
 import zhconv
@@ -35,36 +33,38 @@ class SearchEngine(BasicSearchEngine):
         self.chat.update_one({"ID": data["ID"]}, {"$set": data}, upsert=True)
 
     def search(self, keyword, _type=None, user=None, page=1, mode=None):
-        pass
-
-    def search2(self, keyword, _type=None, user=None, page=1, mode=None):
-        # support for fuzzy search
-        keyword = re.sub(r"\s+", ".*", keyword)
-
+        cond = {}
         hans = zhconv.convert(keyword, "zh-hans")
         hant = zhconv.convert(keyword, "zh-hant")
-        results = []
-        filter_ = {"$or": [{"text": {"$regex": f".*{hans}.*", "$options": "i"}}, {"text": {"$regex": f".*{hant}.*", "$options": "i"}}]}
+
+        if mode:
+            # use or exact match search
+            cond["$or"] = [{"text": hans}, {"text": hant}]
+        else:
+            cond["$or"] = [
+                {"text": {"$regex": f".*{hans}.*", "$options": "i"}},
+                {"text": {"$regex": f".*{hant}.*", "$options": "i"}},
+            ]
+        user = self.clean_user(user)
         if user:
-            user = self.__clean_user(user)
-            filter_["$and"] = [
+            cond["$and"] = [
                 {
-                    "$or": [
-                        {"from_user.id": user},
-                        {"from_user.username": {"$regex": f".*{user}.*", "$options": "i"}},
-                        {"from_user.first_name": {"$regex": f".*{user}.*", "$options": "i"}},
-                        {"chat.id": user},
-                        {"chat.username": {"$regex": f".*{user}.*", "$options": "i"}},
-                        {"chat.first_name": {"$regex": f".*{user}.*", "$options": "i"}},
-                    ]
+                    "$or": [{"chat.username": user}, {"chat.id": user}],
                 }
             ]
-        data = self.col.find(filter_).sort("date", pymongo.DESCENDING)
-        for hit in data:
-            hit.pop("_id")
-            results.append(hit)
-
-        return results
+        if _type:
+            cond["chat.type"] = f"ChatType.{_type}"
+        results = self.chat.find(cond).sort("date", pymongo.DESCENDING).limit(10).skip((page - 1) * 10)
+        total_hits = self.chat.count_documents(cond)
+        total_pages = math.ceil(total_hits / 10)
+        return {
+            "hits": results,
+            "query": keyword,
+            "hitsPerPage": 10,
+            "page": page,
+            "totalPages": total_pages,
+            "totalHits": total_hits,
+        }
 
     def ping(self) -> str:
         count = self.chat.count_documents({})
@@ -73,9 +73,3 @@ class SearchEngine(BasicSearchEngine):
 
     def clear_db(self):
         self.client.drop_database("telegram")
-
-
-if __name__ == "__main__":
-    tges = SearchEngine()
-    for i in tges.search("干扰项"):
-        print(i["text"], i["mention"])
