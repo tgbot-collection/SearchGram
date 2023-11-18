@@ -38,3 +38,5 @@ services:
       - ./sg_data/mongodb:/data/db
     logging:
       driver: none
+    ports:
+      - "127.0.0.1:27017:27017"

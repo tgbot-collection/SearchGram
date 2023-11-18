@@ -7,6 +7,8 @@
 from config import ENGINE
 
 if ENGINE == "meili":
+    print("Using MeiliSearch as search engine")
     from meili import SearchEngine
 elif ENGINE == "mongo":
+    print("Using MongoDB as search engine")
     from mongo import SearchEngine

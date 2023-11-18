@@ -23,14 +23,16 @@ class SearchEngine(BasicSearchEngine):
     def __init__(self):
         self.client = pymongo.MongoClient(host=MONGO_HOST, connect=False, connectTimeoutMS=5000, serverSelectionTimeoutMS=5000)
         self.db = self.client["telegram"]
-        self.col = self.db["chat"]
-        self.history = self.db["history"]
+        self.chat = self.db["chat"]
 
     def __del__(self):
         self.client.close()
 
     def upsert(self, message):
-        pass
+        if self.check_ignore(message):
+            return
+        data = self.set_uid(message)
+        self.chat.update_one({"ID": data["ID"]}, {"$set": data}, upsert=True)
 
     def search(self, keyword, _type=None, user=None, page=1, mode=None):
         pass
