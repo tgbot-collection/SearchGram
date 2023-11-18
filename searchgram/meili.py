@@ -36,10 +36,10 @@ class SearchEngine(BasicSearchEngine):
         data = self.set_uid(message)
         self.client.index("telegram").add_documents([data], primary_key="ID")
 
-    def search(self, keyword, _type=None, user=None, page=1, mode=None):
+    def search(self, keyword, _type=None, user=None, page=1, mode=None) -> dict:
         if mode:
             keyword = f'"{keyword}"'
-        user = self.__clean_user(user)
+        user = self.clean_user(user)
         params = {
             "hitsPerPage": 10,
             "page": page,

@@ -67,12 +67,12 @@ class SearchEngine(BasicSearchEngine):
         return results
 
     def ping(self) -> str:
-        count = self.col.count_documents({})
+        count = self.chat.count_documents({})
         size = self.db.command("dbstats")["storageSize"]
         return f"{count} messages, {sizeof_fmt(size)}"
 
     def clear_db(self):
-        pass
+        self.client.drop_database("telegram")
 
 
 if __name__ == "__main__":
