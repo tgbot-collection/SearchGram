@@ -9,7 +9,7 @@ import time
 
 from tqdm import tqdm
 
-from engine import SearchEngine
+from ..meili import SearchEngine
 
 logging.basicConfig(level=logging.INFO)
 s = SearchEngine()

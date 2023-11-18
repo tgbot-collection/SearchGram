@@ -14,8 +14,8 @@ import logging
 
 import meilisearch
 
-from config import MEILI_HOST, MEILI_PASS
 from utils import setup_logger, sizeof_fmt
+from config import MEILI_HOST, MEILI_PASS
 
 setup_logger()
 config = configparser.ConfigParser(allow_no_value=True)
