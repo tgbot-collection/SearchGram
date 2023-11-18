@@ -8,12 +8,12 @@
 __author__ = "Benny <benny.think@gmail.com>"
 
 import logging
-from engine import BasicSearchEngine
 
 import meilisearch
 
-from utils import sizeof_fmt
 from config import MEILI_HOST, MEILI_PASS
+from engine import BasicSearchEngine
+from utils import sizeof_fmt
 
 
 class SearchEngine(BasicSearchEngine):

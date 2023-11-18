@@ -4,9 +4,10 @@
 # SearchGram - zinc.py
 # 2023-11-18  18:04
 
-from utils import sizeof_fmt
 import zincsearch_sdk
+
 from engine import BasicSearchEngine
+from utils import sizeof_fmt
 
 
 class SearchEngine(BasicSearchEngine):
