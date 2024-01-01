@@ -109,11 +109,13 @@ To get started with SearchGram, you'll need to
 
 # 4. Modify env file
 
-The MEILI_MASTER_KEY is a credential used to access the Web UI of MeiliSearch.
-
-To simplify things, you can use your bot token instead.
-
 All the environment variables are stored in `env/gram.env` and you can see the comments in `config.py` for more details.
+
+Make sure they're correct before you start the container. You can cross-check them with `docker-compose.yml`
+
+```shell
+
+An example of `env/gram.env` is shown below:
 
 ```shell
 # vim env/gram.env

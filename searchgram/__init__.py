@@ -6,9 +6,7 @@
 
 from config import ENGINE
 
-AVAILABLE_ENGINES = ["meili", "mongo"]
-if ENGINE not in AVAILABLE_ENGINES:
-    raise ValueError(f"Unsupported engine {ENGINE}, available engines are {AVAILABLE_ENGINES}")
+AVAILABLE_ENGINES = ["meili", "mongo", "zinc"]
 
 if ENGINE == "meili":
     print("Using MeiliSearch as search engine")
@@ -16,3 +14,8 @@ if ENGINE == "meili":
 elif ENGINE == "mongo":
     print("Using MongoDB as search engine")
     from mongo import SearchEngine
+elif ENGINE == "zinc":
+    print("Using Zinc as search engine")
+    from zinc import SearchEngine
+else:
+    raise ValueError(f"Unsupported engine {ENGINE}, available engines are {AVAILABLE_ENGINES}")

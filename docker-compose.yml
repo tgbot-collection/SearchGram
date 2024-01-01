@@ -43,13 +43,14 @@ services:
 
   zinc:
     image: public.ecr.aws/zinclabs/zincsearch:latest
-    ports:
-      - "127.0.0.1:4080:4080"
     environment:
       ZINC_DATA_PATH: "/data"
-    #      ZINC_FIRST_ADMIN_USER: "admin"
-    #      ZINC_FIRST_ADMIN_PASSWORD: "Complexpass#123"
+      #      GIN_MODE: "release"
+      ZINC_FIRST_ADMIN_USER: "root"
+      ZINC_FIRST_ADMIN_PASSWORD: "root"
     env_file:
       - env/gram.env
     volumes:
       - ./sg_data/zinc:/data
+    ports:
+      - "127.0.0.1:4080:4080"

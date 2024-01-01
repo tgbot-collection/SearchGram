@@ -18,7 +18,9 @@ from utils import sizeof_fmt
 
 class SearchEngine(BasicSearchEngine):
     def __init__(self):
-        self.client = pymongo.MongoClient(host=MONGO_HOST, connect=False, connectTimeoutMS=5000, serverSelectionTimeoutMS=5000)
+        self.client = pymongo.MongoClient(
+            host=MONGO_HOST, connect=False, connectTimeoutMS=5000, serverSelectionTimeoutMS=5000
+        )
         self.db = self.client["telegram"]
         self.chat = self.db["chat"]
 
