@@ -16,9 +16,9 @@ import time
 import fakeredis
 from pyrogram import Client, filters, types
 
+from __init__ import SearchEngine
 from config import BOT_ID
 from init_client import get_client
-from searchgram import SearchEngine
 from utils import setup_logger
 
 setup_logger()

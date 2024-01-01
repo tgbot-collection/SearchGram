@@ -9,7 +9,7 @@ services:
     volumes:
       - ./sg_data/session:/SearchGram/searchgram/session
     command:
-      - client.py
+      - python client.py
 
   bot:
     image: bennythink/searchgram
@@ -19,7 +19,7 @@ services:
     volumes:
       - ./sg_data/session:/SearchGram/searchgram/session
     command:
-      - bot.py
+      - python bot.py
 
   meili:
     image: getmeili/meilisearch:v1.1.1

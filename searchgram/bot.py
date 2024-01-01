@@ -13,9 +13,9 @@ import logging
 from pyrogram import Client, enums, filters, types
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
+from __init__ import SearchEngine
 from config import OWNER_ID, TOKEN
 from init_client import get_client
-from searchgram import SearchEngine
 from utils import setup_logger
 
 tgdb = SearchEngine()
