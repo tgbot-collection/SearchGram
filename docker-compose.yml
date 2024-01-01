@@ -8,8 +8,7 @@ services:
     restart: always
     volumes:
       - ./sg_data/session:/SearchGram/searchgram/session
-    command:
-      - python client.py
+    command: [ "python", "client.py" ]
 
   bot:
     image: bennythink/searchgram
@@ -18,8 +17,7 @@ services:
     restart: always
     volumes:
       - ./sg_data/session:/SearchGram/searchgram/session
-    command:
-      - python bot.py
+    command: [ "python", "bot.py" ]
 
   meili:
     image: getmeili/meilisearch:v1.1.1
