@@ -13,15 +13,20 @@ APP_ID = int(os.getenv("APP_ID", 321232123))
 APP_HASH = os.getenv("APP_HASH", "23231321")
 TOKEN = os.getenv("TOKEN", "1234")  # id:hash
 
+# MeiliSearch, by default it's meili in docker-compose
 MEILI_HOST = os.getenv("MEILI_HOST", "http://meili:7700")
+# Using bot token for simplicity
 MEILI_PASS = os.getenv("MEILI_MASTER_KEY", TOKEN)
 
+# If you want to use MongoDB as search engine, you need to set this
 MONGO_HOST = os.getenv("MONGO_HOST", "mongo")
 
-ENGINE = os.getenv("ENGINE", "meili")
+# available values: meili, mongo, zinc, default: meili
+ENGINE = os.getenv("ENGINE", "meili").lower()
 
+# Your own user id, for example: 260260121
 OWNER_ID = os.getenv("OWNER_ID", "260260121")
-BOT_ID = TOKEN.split(":")[0]
+BOT_ID = int(TOKEN.split(":")[0])
 
 PROXY = os.getenv("PROXY")
 # example proxy configuration

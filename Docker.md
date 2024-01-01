@@ -4,13 +4,23 @@
 
 To get started, install Docker and Docker Compose on your server.
 
-You can choose to use either the legacy version, which is powered by MongoDB, by using the docker-compose.legacy.yml
-file
-or the latest version, which is powered by MeiliSearch, by using the docker-compose.yml file.
+Download the `docker-compose.yml` to your favorite directory.
+
+```shell
+wget https://raw.githubusercontent.com/tgbot-collection/SearchGram/master/docker-compose.yml
+```
+
+In this `docker-compose.yml`, you need to decide which search engine to use, available options are:
+
+* MeiliSearch
+* MongoDB
+* ZincSearch
+
+Comment out the search engine you don't want to use.
 
 # 2. (Optional) Prepare the Encrypted Data Volume
 
-For added security, it's highly recommended to use an encrypted data volume.
+For added security, it's recommended to use an encrypted data volume.
 
 You can use LUKS for this purpose.
 
@@ -93,7 +103,7 @@ cryptsetup luksClose sg_data
 
 To get started with SearchGram, you'll need to
 
-1. obtain your APP_ID and APP_HASH from https://core.telegram.org/,
+1. get your APP_ID and APP_HASH from https://core.telegram.org/,
 2. get your bot token by contacting @BotFather
 3. get your user ID and bot ID by contacting @blog_update_bot.
 
@@ -102,6 +112,8 @@ To get started with SearchGram, you'll need to
 The MEILI_MASTER_KEY is a credential used to access the Web UI of MeiliSearch.
 
 To simplify things, you can use your bot token instead.
+
+All the environment variables are stored in `env/gram.env` and you can see the comments in `config.py` for more details.
 
 ```shell
 # vim env/gram.env
@@ -126,7 +138,7 @@ python client.py
 
 Follow the instruction to log in to your account.
 
-When you see 'started xxx handlers', Ctrl + D to exit. You should find session file
+When you see 'started xxx handlers', Ctrl + C to exit. You should find session file
 under `searchgram/session/client.session`.
 
 # 6. (optional)setup sync id

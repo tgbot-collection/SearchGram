@@ -28,23 +28,15 @@ tgdb = SearchEngine()
 r = fakeredis.FakeStrictRedis()
 
 
-@app.on_message(filters.outgoing | filters.incoming)
+@app.on_message((filters.outgoing | filters.incoming) & ~filters.chat(BOT_ID))
 def message_handler(client: "Client", message: "types.Message"):
-    # don't know why `~filters.chat(int(BOT_ID))` is not working
-    if str(message.chat.id) == BOT_ID:
-        logging.debug("Ignoring message from bot itself")
-        return
-
+    logging.info("Adding new message: %s-%s", message.chat.id, message.id)
     tgdb.upsert(message)
 
 
-@app.on_edited_message()
+@app.on_edited_message(~filters.chat(BOT_ID))
 def message_edit_handler(client: "Client", message: "types.Message"):
-    # don't know why `~filters.chat(int(BOT_ID))` is not working
-    if str(message.chat.id) == BOT_ID:
-        logging.debug("Ignoring message from bot itself")
-        return
-
+    logging.info("Editing old message: %s-%s", message.chat.id, message.id)
     tgdb.upsert(message)
 
 

@@ -6,6 +6,10 @@
 
 from config import ENGINE
 
+AVAILABLE_ENGINES = ["meili", "mongo"]
+if ENGINE not in AVAILABLE_ENGINES:
+    raise ValueError(f"Unsupported engine {ENGINE}, available engines are {AVAILABLE_ENGINES}")
+
 if ENGINE == "meili":
     print("Using MeiliSearch as search engine")
     from meili import SearchEngine

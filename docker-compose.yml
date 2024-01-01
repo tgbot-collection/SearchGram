@@ -25,7 +25,7 @@ services:
     image: getmeili/meilisearch:v1.1.1
     restart: always
     volumes:
-      - ./sg_data/:/meili_data
+      - ./sg_data/meili:/meili_data
     env_file:
       - env/gram.env
     ports:
@@ -35,13 +35,13 @@ services:
     image: mongo:6
     restart: always
     volumes:
-      - ./sg_data/mongodb:/data/db
+      - ./sg_data/mongo:/data/db
     logging:
       driver: none
     ports:
       - "127.0.0.1:27017:27017"
 
-  zincsearch:
+  zinc:
     image: public.ecr.aws/zinclabs/zincsearch:latest
     ports:
       - "127.0.0.1:4080:4080"
@@ -52,4 +52,4 @@ services:
     env_file:
       - env/gram.env
     volumes:
-      - ./sg_data/:/data
+      - ./sg_data/zinc:/data
