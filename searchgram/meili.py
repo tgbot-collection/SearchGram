@@ -67,7 +67,17 @@ class SearchEngine(BasicSearchEngine):
     def clear_db(self):
         self.client.index("telegram").delete()
 
+    def delete_user(self, user):
+        params = {
+            "filter": [f"chat.username = {user} OR chat.id = {user}"],
+            "hitsPerPage": 1000,
+        }
+
+        data = self.client.index("telegram").search("", params)
+        for hit in data["hits"]:
+            self.client.delete_index(hit["ID"])
+
 
 if __name__ == "__main__":
     search = SearchEngine()
-    print(search.search("猫"))
+    print(search.delete_user("InfSGK_bot"))

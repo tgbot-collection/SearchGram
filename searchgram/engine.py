@@ -24,10 +24,13 @@ class BasicSearchEngine:
         return data
 
     @staticmethod
-    def check_ignore(message):
+    def get_config_list():
         config.read("sync.ini")
-        blacklist = config.options("blacklist")
-        whitelist = config.options("whitelist")
+        return config.options("whitelist"), config.options("blacklist")
+
+    @staticmethod
+    def check_ignore(message):
+        whitelist, blacklist = BasicSearchEngine().get_config_list()
         uid = str(message.chat.id)
         chat_type = message.chat.type.name  # upper case
         username = getattr(message.chat, "username", None)
@@ -140,4 +143,7 @@ class BasicSearchEngine:
         pass
 
     def clear_db(self):
+        pass
+
+    def delete_user(self, user):
         pass

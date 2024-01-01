@@ -74,3 +74,6 @@ class SearchEngine(BasicSearchEngine):
 
     def clear_db(self):
         self.client.drop_database("telegram")
+
+    def delete_user(self, user):
+        self.chat.delete_many({"$or": [{"chat.username": user}, {"chat.id": user}]})

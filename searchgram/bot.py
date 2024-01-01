@@ -9,6 +9,8 @@ __author__ = "Benny <benny.think@gmail.com>"
 
 import argparse
 import logging
+from io import BytesIO
+from typing import Tuple
 
 from pyrogram import Client, enums, filters, types
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -66,6 +68,14 @@ This also applies to all above search types.\n
 @app.on_message(filters.command(["ping"]))
 @private_use
 def ping_handler(client: "Client", message: "types.Message"):
+    client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
+    text = tgdb.ping()
+    client.send_message(message.chat.id, text, parse_mode=enums.ParseMode.MARKDOWN)
+
+
+@app.on_message(filters.command(["delete"]))
+@private_use
+def clean_handler(client: "Client", message: "types.Message"):
     client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
     text = tgdb.ping()
     client.send_message(message.chat.id, text, parse_mode=enums.ParseMode.MARKDOWN)
@@ -129,7 +139,7 @@ def generate_navigation(page, total_pages):
     return markup
 
 
-def parse_and_search(text, page=1):
+def parse_and_search(text, page=1) -> Tuple[str, InlineKeyboardMarkup | None]:
     # return text and markup
     args = parser.parse_args(text.split())
     _type = args.type
@@ -174,7 +184,15 @@ def type_search_handler(client: "Client", message: "types.Message"):
 def search_handler(client: "Client", message: "types.Message"):
     client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
     text, markup = parse_and_search(message.text)
-    message.reply_text(text, quote=True, parse_mode=enums.ParseMode.MARKDOWN, reply_markup=markup)
+    if len(text) > 4096:
+        logging.warning("Message too long, sending as file instead")
+        file = BytesIO(text.encode())
+        file.name = "search_result.txt"
+        message.reply_text("Your search result is too long, sending as file instead", quote=True)
+        message.reply_document(file, quote=True, parse_mode=enums.ParseMode.MARKDOWN, reply_markup=markup)
+        file.close()
+    else:
+        message.reply_text(text, quote=True, parse_mode=enums.ParseMode.MARKDOWN, reply_markup=markup)
 
 
 @app.on_callback_query(filters.regex(r"n|p"))

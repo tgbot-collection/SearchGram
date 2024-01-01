@@ -92,6 +92,9 @@ class SearchEngine(BasicSearchEngine):
         api_instance = index.Index(api_client)
         api_instance.delete(INDEX)
 
+    def delete_user(self, user):
+        raise NotImplementedError
+
 
 if __name__ == "__main__":
     engine = SearchEngine()
