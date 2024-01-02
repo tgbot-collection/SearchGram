@@ -12,11 +12,13 @@ wget https://raw.githubusercontent.com/tgbot-collection/SearchGram/master/docker
 
 In this `docker-compose.yml`, you need to decide which search engine to use, available options are:
 
-* MeiliSearch
+* MeiliSearch: default option
 * MongoDB
 * ZincSearch
 
 Comment out the search engine you don't want to use.
+
+> if you're unable to run zinc, please change data folder permission `chown -R 10001:10001 ./sg_data/zinc`
 
 # 2. (Optional) Prepare the Encrypted Data Volume
 
@@ -99,7 +101,7 @@ umount /dev/mapper/sg_data
 cryptsetup luksClose sg_data
 ````
 
-# 3. Obtain APP_ID, APP_HASH, and Bot Token
+# 3. get APP_ID, APP_HASH, and Bot Token
 
 To get started with SearchGram, you'll need to
 
@@ -111,8 +113,6 @@ To get started with SearchGram, you'll need to
 
 All the environment variables are stored in `env/gram.env` and you can see the comments in `config.py` for more details.
 
-Make sure they're correct before you start the container. You can cross-check them with `docker-compose.yml`
-
 ```shell
 
 An example of `env/gram.env` is shown below:
@@ -123,7 +123,7 @@ TOKEN=token
 APP_ID=id
 APP_HASH=hash
 OWNER_ID=your user_id
-MEILI_MASTER_KEY=token
+ENGINE=meili # meili, mongo, zinc
 ```
 
 # 5. Login to client

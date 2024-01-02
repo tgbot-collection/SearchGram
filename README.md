@@ -82,9 +82,12 @@ see [Max indexing memory](https://www.meilisearch.com/docs/learn/configuration/i
 # Installation
 
 **Note: Because chat history should be kept private, we do not offer any public bots.**
-**To learn how to use SearchGram in Docker, please refer to the [Docker.md](Docker.md)**
 
-Please follow the steps below to install SearchGram:
+Please follow the steps below to install SearchGram on your own server.
+
+This guide will show you how to install SearchGram with our default search engine, MeiliSearch.
+
+**To learn how to use SearchGram in Docker with different search engine, please refer to the [Docker.md](Docker.md)**
 
 ## 1. Preparation
 

@@ -73,7 +73,7 @@ class SearchEngine(BasicSearchEngine):
         total_hits = results.hits.total.value
         total_pages = math.ceil(total_hits / 10)
         return {
-            "hits": results.hits.hits,
+            "hits": [i.source for i in results.hits.hits],
             "query": keyword,
             "hitsPerPage": 10,
             "page": page,

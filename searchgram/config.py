@@ -25,9 +25,10 @@ MONGO_HOST = os.getenv("MONGO_HOST", "mongo")
 # available values: meili, mongo, zinc, default: meili
 ENGINE = os.getenv("ENGINE", "meili").lower()
 
+# If you want to use Zinc as search engine, you need to set username and password
 ZINC_HOST = os.getenv("ZINC_HOST", "http://zinc:4080")
-ZINC_USER = os.getenv("ZINC_USER", "root")
-ZINC_PASS = os.getenv("ZINC_PASS", "root")
+ZINC_USER = os.getenv("ZINC_FIRST_ADMIN_USER", "root")
+ZINC_PASS = os.getenv("ZINC_FIRST_ADMIN_PASSWORD", "root")
 
 ####################################
 # Your own user id, for example: 260260121

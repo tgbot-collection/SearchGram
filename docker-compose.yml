@@ -43,9 +43,6 @@ services:
     image: public.ecr.aws/zinclabs/zincsearch:latest
     environment:
       ZINC_DATA_PATH: "/data"
-      #      GIN_MODE: "release"
-      ZINC_FIRST_ADMIN_USER: "root"
-      ZINC_FIRST_ADMIN_PASSWORD: "root"
     env_file:
       - env/gram.env
     volumes:

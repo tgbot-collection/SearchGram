@@ -146,6 +146,7 @@ def parse_and_search(text, page=1) -> Tuple[str, InlineKeyboardMarkup | None]:
     user = args.user
     keyword = args.keyword
     mode = args.mode
+    logging.info("Search keyword: %s, type: %s, user: %s, page: %s, mode: %s", keyword, _type, user, page, mode)
     results = tgdb.search(keyword, _type, user, page, mode)
     text = parse_search_results(results)
     if not text:
