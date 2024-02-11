@@ -81,7 +81,7 @@ def clean_handler(client: "Client", message: "types.Message"):
     client.send_message(message.chat.id, text, parse_mode=enums.ParseMode.MARKDOWN)
 
 
-def get_name(chat: dict):
+def get_display_name(chat: dict):
     if chat.get("title"):
         return chat["title"]
     # get first_name last_name, if not exist, return username
@@ -103,17 +103,18 @@ def parse_search_results(data: "dict"):
         if not text:
             # maybe sticker of media without caption
             continue
-        chat_username = get_name(hit["chat"])
-        from_username = get_name(hit.get("from_user") or hit["sender_chat"])
+        logging.info("Hit: %s", hit)
+        chat_username = get_display_name(hit["chat"])
+        from_username = get_display_name(hit.get("from_user") or hit["sender_chat"])
         date = hit["date"]
         outgoing = hit["outgoing"]
         username = hit["chat"].get("username")
-        from_id = hit["from_user"]["id"]
-        from_username = hit["from_user"].get("username")
+        from_ = hit.get("from_user", {})
+        from_id = from_.get("id")
         message_id = hit["id"]
         # https://corefork.telegram.org/api/links
         deep_link = f"tg://resolve?domain={username}" if username else f"tg://user?id={from_id}"
-        text_link = f"https://t.me/{username}/{message_id}" if from_username else f"https://t.me/c/{from_id}/{message_id}"
+        text_link = f"https://t.me/{username}/{message_id}" if username else f"https://t.me/c/{from_id}/{message_id}"
 
         if outgoing:
             result += f"{from_username}-> [{chat_username}]({deep_link}) on {date}: \n`{text}` [👀]({text_link})\n\n"
