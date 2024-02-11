@@ -182,7 +182,9 @@ def type_search_handler(client: "Client", message: "types.Message"):
     refined_text = f"-t={chat_type} {user_filter} {keyword}"
     client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
     text, markup = parse_and_search(refined_text)
-    message.reply_text(text, quote=True, parse_mode=enums.ParseMode.MARKDOWN, reply_markup=markup)
+    message.reply_text(
+        text, quote=True, parse_mode=enums.ParseMode.MARKDOWN, reply_markup=markup, disable_web_page_preview=True
+    )
 
 
 @app.on_message(filters.text & filters.incoming)
@@ -198,7 +200,9 @@ def search_handler(client: "Client", message: "types.Message"):
         message.reply_document(file, quote=True, parse_mode=enums.ParseMode.MARKDOWN, reply_markup=markup)
         file.close()
     else:
-        message.reply_text(text, quote=True, parse_mode=enums.ParseMode.MARKDOWN, reply_markup=markup)
+        message.reply_text(
+            text, quote=True, parse_mode=enums.ParseMode.MARKDOWN, reply_markup=markup, disable_web_page_preview=True
+        )
 
 
 @app.on_callback_query(filters.regex(r"n|p"))
@@ -231,7 +235,7 @@ def send_method_callback(client: "Client", callback_query: types.CallbackQuery):
         refined_text = user_query
     client.send_chat_action(message.chat.id, enums.ChatAction.TYPING)
     new_text, new_markup = parse_and_search(refined_text, new_page)
-    message.edit_text(new_text, reply_markup=new_markup)
+    message.edit_text(new_text, reply_markup=new_markup, disable_web_page_preview=True)
 
 
 if __name__ == "__main__":
