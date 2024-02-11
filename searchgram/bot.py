@@ -118,7 +118,7 @@ def parse_search_results(data: "dict"):
         if outgoing:
             result += f"{from_username}-> [{chat_username}]({deep_link}) on {date}: \n`{text}` [👀]({text_link})\n\n"
         else:
-            result += f"[{chat_username}]({deep_link}) -> me on {date}: \n`{text}`\n\n"
+            result += f"[{chat_username}]({deep_link}) -> me on {date}: \n`{text}` [👀]({text_link})\n\n"
     return result
 
 
