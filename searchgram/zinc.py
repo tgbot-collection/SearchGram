@@ -43,7 +43,7 @@ class SearchEngine(BasicSearchEngine):
                     ],
                 ),
             ),
-            sort=["-@timestamp"],
+            sort=["-@date"],
             _from=(page - 1) * 10,
             size=10,
             track_total_hits=True,
