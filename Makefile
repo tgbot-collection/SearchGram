@@ -1,5 +1,5 @@
 init:
-	docker run --rm -v $(shell pwd)/sg_data/session:/SearchGram/searchgram/session --env-file=env/gram.env --entrypoint=/bin/sh -it bennythink/searchgram:ng
+	docker run --rm -v $(shell pwd)/sg_data/session:/SearchGram/searchgram/session --env-file=env/gram.env --entrypoint=/bin/sh -it bennythink/searchgram
 
 up:
 	echo "Starting up..."
@@ -40,6 +40,6 @@ format:
 
 upgrade:
 	git pull
-	docker pull bennythink/searchgram:ng
+	docker pull bennythink/searchgram
 	docker-compose up -d
 
