@@ -4,6 +4,6 @@ fakeredis==2.27.0
 tqdm==4.67.1
 meilisearch==0.31.1
 coloredlogs==15.0.1
-pymongo==4.11.2
+pymongo==4.11.3
 zhconv==1.4.3
 zincsearch-sdk==0.3.3
