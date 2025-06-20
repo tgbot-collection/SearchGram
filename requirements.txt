@@ -2,7 +2,7 @@ pyrogram==2.0.106
 tgcrypto==1.2.5
 fakeredis==2.30.0
 tqdm==4.67.1
-meilisearch==0.34.1
+meilisearch==0.36.0
 coloredlogs==15.0.1
 pymongo==4.13.2
 zhconv==1.4.3
