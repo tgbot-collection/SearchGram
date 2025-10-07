@@ -1,6 +1,6 @@
 pyrogram==2.0.106
 tgcrypto==1.2.5
-fakeredis==2.31.1
+fakeredis==2.31.3
 tqdm==4.67.1
 meilisearch==0.37.0
 coloredlogs==15.0.1
