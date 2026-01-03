@@ -125,15 +125,15 @@ wheels = [
 
 [[package]]
 name = "meilisearch"
-version = "0.30.0"
+version = "0.38.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "camel-converter", extra = ["pydantic"] },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/53/e7/6d2e7bd5285f1358acf76eed1bf1c77764d4819e14ea0e6b236720cafe34/meilisearch-0.30.0.tar.gz", hash = "sha256:86bf63ef482f38aa13a602984fc2b97670b8f53fce8262df518d8c41f3520149", size = 21742, upload-time = "2024-02-08T15:30:12.338Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/41/63/a9f40f36e9854a8b65f16f26e7f1fac3fe96aa60c634615048c1bbec4c59/meilisearch-0.38.0.tar.gz", hash = "sha256:9093ebe69f6d239e78a58c46dc5e2ee9f16be041514fc833c143807406dae72d", size = 28734, upload-time = "2025-11-11T13:43:15.93Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/85/98/01d0e38b5080ba6242dd9ab37d4f9b7339144ad97b7fa4c1e5f21cff2d0e/meilisearch-0.30.0-py3-none-any.whl", hash = "sha256:966edab243f2fe1b2d34d9ddd4ad99183344fed49858cda75f3671d746bfc320", size = 22522, upload-time = "2024-02-08T15:30:10.289Z" },
+    { url = "https://files.pythonhosted.org/packages/c0/81/0934047ebe225dcd154cf9a752e0f85fce8449268a611704b2a74775529e/meilisearch-0.38.0-py3-none-any.whl", hash = "sha256:834e968464d3b88dd74160c61261012e77fd814291c3786495486dfaccb4d2a7", size = 29254, upload-time = "2025-11-11T13:43:14.735Z" },
 ]
 
 [[package]]
@@ -292,7 +292,7 @@ dependencies = [
 requires-dist = [
     { name = "coloredlogs", specifier = "==15.0.1" },
     { name = "fakeredis", specifier = "==2.21.0" },
-    { name = "meilisearch", specifier = "==0.30.0" },
+    { name = "meilisearch", specifier = "==0.38.0" },
     { name = "pymongo", specifier = "==4.6.1" },
     { name = "pyrogram", specifier = "==2.0.106" },
     { name = "tgcrypto", specifier = "==1.2.5" },
