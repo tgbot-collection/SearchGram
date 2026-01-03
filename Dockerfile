@@ -1,11 +1,11 @@
-FROM python:3.11-alpine as builder
+FROM python:3.14-alpine as builder
 
 RUN apk update && apk add --no-cache tzdata alpine-sdk ca-certificates
 ADD requirements.txt /tmp/
 RUN pip3 install --user -r /tmp/requirements.txt && rm /tmp/requirements.txt
 
 
-FROM python:3.11-alpine
+FROM python:3.14-alpine
 WORKDIR /SearchGram/searchgram
 
 COPY --from=builder /root/.local /usr/local
