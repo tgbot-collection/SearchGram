@@ -91,15 +91,15 @@ wheels = [
 
 [[package]]
 name = "fakeredis"
-version = "2.21.0"
+version = "2.34.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "redis" },
     { name = "sortedcontainers" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5f/43/fe315b73776bf2b0bedef2c3a8d0c3a95a3b9061e65d24f889a50df87cf6/fakeredis-2.21.0.tar.gz", hash = "sha256:1b3ff9c068e39c43725f2373b105228cd03e6a50fc79a5698e852b7601b1201b", size = 128492, upload-time = "2024-01-31T00:31:04.579Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d8/44/c403963727d707e03f49a417712b0a23e853d33ae50729679040b6cfe281/fakeredis-2.34.0.tar.gz", hash = "sha256:72bc51a7ab39bedf5004f0cf1b5206822619c1be8c2657fd878d1f4250256c57", size = 177156, upload-time = "2026-02-16T15:56:34.318Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/93/bf/92e69ddd08150847eb796473e414f3d69712d3aac3aa44b53abc50d3bd38/fakeredis-2.21.0-py3-none-any.whl", hash = "sha256:dcea37c57a1aaf39bed1227aea20de052fb19dc030ccac3f8a73324b2ec90cee", size = 83291, upload-time = "2024-01-31T00:31:01.996Z" },
+    { url = "https://files.pythonhosted.org/packages/1a/8e/af19c00753c432355f9b76cec3ab0842578de43ba575e82735b18c1b3ec9/fakeredis-2.34.0-py3-none-any.whl", hash = "sha256:bc45d362c6cc3a537f8287372d8ea532538dfbe7f5d635d0905d7b3464ec51d2", size = 122063, upload-time = "2026-02-16T15:56:21.227Z" },
 ]
 
 [[package]]
@@ -291,7 +291,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "coloredlogs", specifier = "==15.0.1" },
-    { name = "fakeredis", specifier = "==2.21.0" },
+    { name = "fakeredis", specifier = "==2.34.0" },
     { name = "meilisearch", specifier = "==0.30.0" },
     { name = "pymongo", specifier = "==4.6.1" },
     { name = "pyrogram", specifier = "==2.0.106" },
